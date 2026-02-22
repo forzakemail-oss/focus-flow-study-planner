@@ -1,1 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYBE | Teen Innovation</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --true-blue: #1E90FF;
+    --sky-blue: #87CEEB;
+    --navy-blue: #0B3D91;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--white);
+    color: var(--navy-blue);
+    overflow-x: hidden;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background: var(--navy-blue);
+    color: var(--white);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--sky-blue);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--true-blue), var(--sky-blue));
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    animation: fadeIn 1.2s ease forwards;
+    opacity: 0;
+}
+
+.hero-content p {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    animation: fadeIn 2s ease forwards;
+    opacity: 0;
+}
+
+.cta-btn {
+    margin-top: 25px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    background: var(--navy-blue);
+    color: var(--white);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.cta-btn:hover {
+    transform: scale(1.08);
+    background: var(--white);
+    color: var(--navy-blue);
+}
+
+/* Floating Animated Circles */
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.08;
+    animation: float 8s infinite ease-in-out;
+}
+
+.circle1 { width: 300px; height: 300px; top: 10%; left: 10%; }
+.circle2 { width: 200px; height: 200px; bottom: 10%; right: 15%; animation-delay: 2s; }
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-50px); }
+    100% { transform: translateY(0); }
+}
+
+/* SECTIONS */
+section {
+    padding: 100px 10%;
+    text-align: center;
+}
+
+.features {
+    background: var(--white);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.feature-card {
+    background: var(--sky-blue);
+    padding: 30px;
+    border-radius: 20px;
+    transition: 0.4s ease;
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    background: var(--true-blue);
+    color: var(--white);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.about {
+    background: var(--navy-blue);
+    color: var(--white);
+}
+
+.contact {
+    background: var(--white);
+}
+
+/* FOOTER */
+footer {
+    background: var(--navy-blue);
+    color: var(--white);
+    padding: 20px;
+}
+
+/* SCROLL REVEAL */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: 1s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* MOBILE */
+@media(max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background: var(--navy-blue);
+        width: 200px;
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 0;
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">VYBE</div>
+    <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Join</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+
+    <div class="hero-content">
+        <h1>Level Up Your Vibes</h1>
+        <p>The ultimate teen platform built for connection, creativity & convenience.</p>
+        <button class="cta-btn">Get Started</button>
+    </div>
+</header>
+
+<section id="features" class="features reveal">
+    <h2>Why Teens Love It</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>Social Connect</h3>
+            <p>Build your circle. Share your vibe. Stay connected.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Study Boost</h3>
+            <p>Smart tools to help you stay ahead effortlessly.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Fun Mode</h3>
+            <p>Interactive experiences designed for real enjoyment.</p>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="about reveal">
+    <h2>Built For The Next Generation</h2>
+    <p>Designed with style, speed, and simplicity in mind. VYBE gives teens a space to express, explore, and excel.</p>
+</section>
+
+<section id="contact" class="contact reveal">
+    <h2>Be First To Experience It</h2>
+    <button class="cta-btn">Join The Movement</button>
+</section>
+
+<footer>
+    © 2026 VYBE | Designed for Teens
+</footer>
+
+<script>
+// Mobile Menu
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+});
+
+// Scroll Reveal Animation
+function reveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const visible = 100;
+        if (elementTop < windowHeight - visible) {
+            el.classList.add('active');
+        }
+    });
+}
+
+window.addEventListener('scroll', reveal);
+</script>
+
+</body>
+</html>

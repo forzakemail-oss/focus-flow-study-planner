@@ -23,16 +23,16 @@ body{background:var(--primary);color:var(--text);overflow-x:hidden;transition:0.
 .nav-links li a:hover{color:var(--accent);}
 @media(max-width:768px){
   .burger{display:block;}
-  .nav-links{display:none;flex-direction:column;background:var(--dark);position:absolute;top:50px;width:100%;}
+  .nav-links{display:none;flex-direction:column;background:var(--dark);position:absolute;top:50px;width:100%;padding:10px 0;}
   .nav-links.open{display:flex;}
 }
-.hero{height:40vh;display:flex;justify-content:center;align-items:center;background:var(--accent);color:white;text-align:center;padding:0 10px;margin-top:50px;transition:0.3s;}
-.section{padding:30px;text-align:center;transition:0.3s;}
+.hero{height:40vh;display:flex;justify-content:center;align-items:center;background:var(--accent);color:white;text-align:center;padding:0 10px;margin-top:50px;transition:0.3s;border-radius:0;}
+.section{padding:30px;text-align:center;transition:0.3s;max-width:900px;margin:auto;}
 .alt{background:#f7f7f7;}
-.btn{padding:10px 20px;border:none;background:var(--dark);color:white;border-radius:25px;cursor:pointer;margin:5px;transition:.3s;}
+.btn{padding:10px 20px;border:none;background:var(--dark);color:white;border-radius:25px;cursor:pointer;margin:5px;transition:.3s;font-weight:600;}
 .btn:hover{background:var(--accent);}
 .settings-btn{position:fixed;bottom:20px;right:20px;padding:15px;border-radius:50%;background:var(--dark);color:white;cursor:pointer;z-index:1500;}
-.settings-panel{position:fixed;right:-400px;top:0;width:350px;height:100%;background:#fafafa;padding:20px;overflow:auto;transition:.3s;box-shadow:-2px 0 8px rgba(0,0,0,0.2);}
+.settings-panel{position:fixed;right:-400px;top:0;width:350px;height:100%;background:#fafafa;padding:20px;overflow:auto;transition:.3s;box-shadow:-2px 0 8px rgba(0,0,0,0.2);border-left:1px solid #ddd;}
 .settings-panel.open{right:0;}
 #schoolList{list-style:none;max-height:150px;overflow:auto;padding:0;margin:5px 0;}
 #schoolList li{padding:8px;cursor:pointer;border-bottom:1px solid #eee;}
@@ -51,6 +51,7 @@ ul li button:hover{background:darkred;}
   .hero h1{font-size:1.8rem;}
   .btn{padding:8px 16px;font-size:0.9rem;}
 }
+.hidden{display:none;}
 </style>
 </head>
 <body>
@@ -94,20 +95,18 @@ ul li button:hover{background:darkred;}
 
 <section id="affirmationSection" class="section">
   <h2>Daily Affirmation</h2>
-  <p id="affText">Click the button for your daily affirmation!</p>
-  <button class="btn" onclick="showAffirmation()">Show Affirmation</button>
+  <button class="btn" onclick="showAffirmation()">Show Daily Affirmation</button>
+  <p id="affText"></p>
 </section>
 
 <section id="postStudySection" class="section alt">
-  <h2>Post-Study "Getting Ready" Planner</h2>
-  <p>Use this template to ensure your next day is ready:</p>
-  <ul id="postStudyList">
-    <li>Iron clothes <button onclick="completePostStudy(this)">✔</button></li>
-    <li>Pack bag <button onclick="completePostStudy(this)">✔</button></li>
-    <li>Clean shoes <button onclick="completePostStudy(this)">✔</button></li>
-  </ul>
-  <input type="text" id="postStudyInput" placeholder="Add your own post-study task">
-  <button class="btn" onclick="addPostStudy()">Add Task</button>
+  <h2>Optional Post-Study Planner</h2>
+  <label><input type="checkbox" id="showPostStudy" onchange="togglePostStudy()"> Show Post-Study Planner</label>
+  <div id="postStudyContainer" class="hidden">
+    <input type="text" id="postStudyInput" placeholder="Add post-study task">
+    <button class="btn" onclick="addPostStudy()">Add Task</button>
+    <ul id="postStudyList"></ul>
+  </div>
 </section>
 
 <section id="musicSection" class="section">
@@ -122,7 +121,7 @@ ul li button:hover{background:darkred;}
 
 <section id="aboutSection" class="section alt">
   <h2>About FocusFlow</h2>
-  <p>FocusFlow is more than a website—it’s a habit enforcer. Build daily routines, track your studies, and stay motivated with daily affirmations, school-themed environments, and a personal timetable planner. Designed to help students in Jamaica (and beyond) elevate their grades and create effective study habits.</p>
+  <p>FocusFlow is more than a website—it’s a habit enforcer. Build routines, track your studies, and stay motivated. Customize school themes, language, and daily planners to improve focus and organization.</p>
 </section>
 </main>
 
@@ -133,26 +132,32 @@ ul li button:hover{background:darkred;}
   <label for="schoolSelect">School Theme</label>
   <input type="text" id="schoolSelect" placeholder="Search..." oninput="filterSchools()">
   <ul id="schoolList"></ul>
+  <button class="btn" onclick="applyDefaultTheme()">Default Theme</button>
   <hr>
-  <h4>Suggestions</h4>
-  <p>Contact us at <strong>forzakemail@gmail.com</strong></p>
+  <label for="languageSelect">Language:</label>
+  <select id="languageSelect" onchange="setLanguage(this.value)">
+    <option value="standard">Standard English</option>
+    <option value="patois">Jamaican Patois</option>
+  </select>
   <hr>
   <button class="btn" onclick="toggleDarkMode()">Toggle Dark / Focus Mode</button>
   <button class="btn alt" onclick="closeSettings()">Close</button>
+  <hr>
+  <p>Suggestions: <strong>forzakemail@gmail.com</strong></p>
 </div>
 
 <script>
 // SCHOOL THEMES
 const schools = [
-  { name:"Jamaica College", colors:["#0D47A1","#FFFFFF"] },
-  { name:"Calabar High School", colors:["#1B5E20","#000000"] },
-  { name:"Kingston College", colors:["#6A1B9A","#FFFFFF"] },
-  { name:"Wolmer’s Boys’ School", colors:["#800000","#FFD700"] },
-  { name:"St Jago High School", colors:["#1B5E20","#FFD700"] },
-  { name:"St George’s College", colors:["#0D47A1","#FFFFFF"] },
-  { name:"Munro College", colors:["#0D47A1","#FFD700"] },
-  { name:"Hampton School", colors:["#1976D2","#FFFFFF"] },
-  { name:"Rusea’s High School", colors:["#F9A825","#1565C0","#2E7D32"] }
+  { name:"Jamaica College", colors:["#0D47A1","#BBDEFB"] },
+  { name:"Calabar High School", colors:["#1B5E20","#A5D6A7"] },
+  { name:"Kingston College", colors:["#6A1B9A","#E1BEE7"] },
+  { name:"Wolmer’s Boys’ School", colors:["#800000","#FFCDD2"] },
+  { name:"St Jago High School", colors:["#1B5E20","#C8E6C9"] },
+  { name:"St George’s College", colors:["#0D47A1","#BBDEFB"] },
+  { name:"Munro College", colors:["#0D47A1","#C5CAE9"] },
+  { name:"Hampton School", colors:["#1976D2","#90CAF9"] },
+  { name:"Rusea’s High School", colors:["#F9A825","#FFF9C4"] }
 ];
 function filterSchools(){
   const q = document.getElementById("schoolSelect").value.toLowerCase();
@@ -165,8 +170,11 @@ function filterSchools(){
 }
 function applyTheme(colors){
   document.documentElement.style.setProperty("--accent",colors[0]);
-  document.documentElement.style.setProperty("--dark",colors[1]||colors[0]);
-  document.documentElement.style.setProperty("--primary",colors[2]||"#fff");
+  document.documentElement.style.setProperty("--primary",colors[1]||"#fff");
+}
+function applyDefaultTheme(){
+  document.documentElement.style.setProperty("--accent","#1E90FF");
+  document.documentElement.style.setProperty("--primary","#ffffff");
 }
 
 // NAV
@@ -177,17 +185,14 @@ function closeSettings(){document.getElementById("settingsPanel").classList.remo
 // DARK MODE
 function toggleDarkMode(){document.body.classList.toggle("dark-mode");}
 
+// LANGUAGE
+function setLanguage(lang){
+  if(lang==="patois"){document.getElementById("heroText").innerText="Focus Strong. Mek Yuh Grades Rise!";}
+  else{document.getElementById("heroText").innerText="Focus Hard. Elevate Your Mind.";}
+}
+
 // AFFIRMATIONS
-const affirmations = [
-  "Every day you grow stronger.",
-  "Focus today, succeed tomorrow.",
-  "Small progress is still progress.",
-  "Your hard work defines your future.",
-  "Stay consistent, stay committed.",
-  "One focused hour can change your future.",
-  "Discipline today = success tomorrow.",
-  "Consistency beats cramming."
-];
+const affirmations=["Every day you grow stronger.","Focus today, succeed tomorrow.","Small progress is still progress.","Your hard work defines your future.","Stay consistent, stay committed.","One focused hour can change your future.","Discipline today = success tomorrow.","Consistency beats cramming."];
 function showAffirmation(){
   const now = Date.now();
   const last = localStorage.getItem("lastAffirmationTime");
@@ -206,57 +211,32 @@ function renderPlans(){
   const ul = document.getElementById("planList"); ul.innerHTML="";
   plans.forEach((p,i)=>{
     let li=document.createElement("li"); li.textContent=p;
-    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{plans.splice(i,1);savePlans(); notify("Plan completed: "+p);};
+    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{plans.splice(i,1);savePlans();};
     li.appendChild(btn); ul.appendChild(li);
   });
 }
 function addPlan(){
-  const input = document.getElementById("planInput");
+  const input=document.getElementById("planInput");
   if(input.value.trim()){plans.push(input.value.trim()); savePlans(); input.value="";}
 }
 function savePlans(){localStorage.setItem("plans", JSON.stringify(plans)); renderPlans();}
 
-// POST-STUDY PLANNER
-let postStudyTasks = JSON.parse(localStorage.getItem("postStudyTasks"))||[];
-function renderPostStudy(){
-  const ul = document.getElementById("postStudyList");
-  ul.innerHTML="";
-  let defaultTasks = ["Iron clothes","Pack bag","Clean shoes"];
-  [...defaultTasks, ...postStudyTasks].forEach((t,i)=>{
-    let li=document.createElement("li"); li.textContent=t;
-    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{li.style.textDecoration="line-through"; notify("Post-study task done: "+t);};
-    li.appendChild(btn); ul.appendChild(li);
-  });
-}
-function addPostStudy(){
-  const input = document.getElementById("postStudyInput");
-  if(input.value.trim()){postStudyTasks.push(input.value.trim()); localStorage.setItem("postStudyTasks", JSON.stringify(postStudyTasks)); renderPostStudy(); input.value="";}
-}
+// POST-STUDY
+let postTasks = JSON.parse(localStorage.getItem("postTasks"))||[];
+function renderPostStudy(){const ul=document.getElementById("postStudyList");ul.innerHTML="";postTasks.forEach((t,i)=>{let li=document.createElement("li"); li.textContent=t; let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{li.style.textDecoration="line-through";}; li.appendChild(btn); ul.appendChild(li);});}
+function addPostStudy(){const input=document.getElementById("postStudyInput");if(input.value.trim()){postTasks.push(input.value.trim());localStorage.setItem("postTasks",JSON.stringify(postTasks));renderPostStudy();input.value="";}}
+function togglePostStudy(){document.getElementById("postStudyContainer").classList.toggle("hidden");}
 
 // TIMER
 let time=1500, interval=null;
-function updateTimer(){document.getElementById("timer").innerText=
-  `${Math.floor(time/60)}:${(time%60).toString().padStart(2,"0")}`;}
-function startTimer(){if(!interval){interval=setInterval(()=>{updateTimer();time--;if(time<0){clearInterval(interval);interval=null;notify("Study session complete! Take a break!");}},1000);}}
-function pauseTimer(){clearInterval(interval); interval=null;}
-function resetTimer(){pauseTimer(); updateTimer();}
-function setCustomTime(){
-  const val = parseInt(document.getElementById("customTime").value);
-  if(val>0){time = val*60; updateTimer();}
-}
-
-// NOTIFICATIONS
-function notify(message){
-  if(Notification.permission==="granted"){new Notification(message);}
-  else if(Notification.permission!=="denied"){Notification.requestPermission();}
-}
+function updateTimer(){document.getElementById("timer").innerText=`${Math.floor(time/60)}:${(time%60).toString().padStart(2,"0")}`;}
+function startTimer(){if(!interval){interval=setInterval(()=>{updateTimer();time--;if(time<0){clearInterval(interval);interval=null;alert("Session complete! Take a break.");}},1000);}}
+function pauseTimer(){clearInterval(interval);interval=null;}
+function resetTimer(){pauseTimer();updateTimer();}
+function setCustomTime(){const val=parseInt(document.getElementById("customTime").value);if(val>0){time=val*60;updateTimer();}}
 
 // INIT
-document.addEventListener("DOMContentLoaded",()=>{
-  updateTimer();
-  renderPlans();
-  renderPostStudy();
-});
+document.addEventListener("DOMContentLoaded",()=>{updateTimer();renderPlans();renderPostStudy();});
 </script>
 </body>
 </html>

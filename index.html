@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,15 +195,18 @@ function setLanguage(lang){
 // AFFIRMATIONS
 const affirmations=["Every day you grow stronger.","Focus today, succeed tomorrow.","Small progress is still progress.","Your hard work defines your future.","Stay consistent, stay committed.","One focused hour can change your future.","Discipline today = success tomorrow.","Consistency beats cramming."];
 function showAffirmation(){
-  const now = Date.now();
-  const last = localStorage.getItem("lastAffirmationTime");
-  if(!last || now - last > 86400000){
-    const aff = affirmations[Math.floor(Math.random()*affirmations.length)];
-    document.getElementById("affText").innerText = aff;
-    localStorage.setItem("lastAffirmationTime", now);
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
+  const lastDate = localStorage.getItem("lastAffirmationDate");
+  let aff;
+  if(lastDate !== today){
+    aff = affirmations[Math.floor(Math.random()*affirmations.length)];
+    localStorage.setItem("todayAffirmation", aff);
+    localStorage.setItem("lastAffirmationDate", today);
   } else {
-    document.getElementById("affText").innerText = "Come back tomorrow for a new affirmation!";
+    aff = localStorage.getItem("todayAffirmation");
   }
+  document.getElementById("affText").innerText = aff;
 }
 
 // TIMETABLE

@@ -11,10 +11,12 @@
   --text:#0B3D91;
   --accent:#1E90FF;
   --dark:#0A2351;
+  --bg-dark:#121212;
+  --text-dark:#ffffff;
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:var(--primary);color:var(--text);overflow-x:hidden;}
-.top-nav{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dark);color:white;position:fixed;width:100%;z-index:1000;}
+body{background:var(--primary);color:var(--text);overflow-x:hidden;transition:0.3s;}
+.top-nav{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dark);color:white;position:fixed;width:100%;z-index:1000;transition:0.3s;}
 .burger{display:none;font-size:24px;background:none;border:none;color:white;cursor:pointer;}
 .nav-links{list-style:none;display:flex;gap:15px;}
 .nav-links li a{color:white;text-decoration:none;transition:.3s;}
@@ -24,8 +26,8 @@ body{background:var(--primary);color:var(--text);overflow-x:hidden;}
   .nav-links{display:none;flex-direction:column;background:var(--dark);position:absolute;top:50px;width:100%;}
   .nav-links.open{display:flex;}
 }
-.hero{height:40vh;display:flex;justify-content:center;align-items:center;background:var(--accent);color:white;text-align:center;padding:0 10px;margin-top:50px;}
-.section{padding:30px;text-align:center;}
+.hero{height:40vh;display:flex;justify-content:center;align-items:center;background:var(--accent);color:white;text-align:center;padding:0 10px;margin-top:50px;transition:0.3s;}
+.section{padding:30px;text-align:center;transition:0.3s;}
 .alt{background:#f7f7f7;}
 .btn{padding:10px 20px;border:none;background:var(--dark);color:white;border-radius:25px;cursor:pointer;margin:5px;transition:.3s;}
 .btn:hover{background:var(--accent);}
@@ -42,6 +44,9 @@ ul{list-style:none;padding:0;}
 ul li{background:#e0e0e0;margin:5px 0;padding:8px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;}
 ul li button{background:red;color:white;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;}
 ul li button:hover{background:darkred;}
+.dark-mode body,.dark-mode .section,.dark-mode .alt{background:var(--bg-dark);color:var(--text-dark);}
+.dark-mode .top-nav,.dark-mode .btn,.dark-mode .settings-btn{background:var(--dark);color:white;}
+.dark-mode .hero{background:var(--accent);color:white;}
 @media(max-width:500px){
   .hero h1{font-size:1.8rem;}
   .btn{padding:8px 16px;font-size:0.9rem;}
@@ -57,6 +62,7 @@ ul li button:hover{background:darkred;}
     <li><a href="#timerSection">Timer</a></li>
     <li><a href="#timetableSection">Timetable</a></li>
     <li><a href="#affirmationSection">Affirmation</a></li>
+    <li><a href="#postStudySection">Post-Study Planner</a></li>
     <li><a href="#musicSection">Music</a></li>
     <li><a href="#aboutSection">About</a></li>
   </ul>
@@ -68,7 +74,9 @@ ul li button:hover{background:darkred;}
 
 <main>
 <section id="timerSection" class="section">
-  <h2>Pomodoro Focus Timer</h2>
+  <h2>Pomodoro / Custom Timer</h2>
+  <input type="number" id="customTime" placeholder="Enter minutes" min="1">
+  <button class="btn" onclick="setCustomTime()">Set Timer</button>
   <div id="timer">25:00</div>
   <div class="btn-group">
     <button class="btn" onclick="startTimer()">Start</button>
@@ -90,7 +98,19 @@ ul li button:hover{background:darkred;}
   <button class="btn" onclick="showAffirmation()">Show Affirmation</button>
 </section>
 
-<section id="musicSection" class="section alt">
+<section id="postStudySection" class="section alt">
+  <h2>Post-Study "Getting Ready" Planner</h2>
+  <p>Use this template to ensure your next day is ready:</p>
+  <ul id="postStudyList">
+    <li>Iron clothes <button onclick="completePostStudy(this)">✔</button></li>
+    <li>Pack bag <button onclick="completePostStudy(this)">✔</button></li>
+    <li>Clean shoes <button onclick="completePostStudy(this)">✔</button></li>
+  </ul>
+  <input type="text" id="postStudyInput" placeholder="Add your own post-study task">
+  <button class="btn" onclick="addPostStudy()">Add Task</button>
+</section>
+
+<section id="musicSection" class="section">
   <h2>Study Music</h2>
   <iframe width="300" height="170"
   src="https://www.youtube.com/embed/jfKfPfyJRdk"
@@ -100,7 +120,7 @@ ul li button:hover{background:darkred;}
   allowfullscreen></iframe>
 </section>
 
-<section id="aboutSection" class="section">
+<section id="aboutSection" class="section alt">
   <h2>About FocusFlow</h2>
   <p>FocusFlow is more than a website—it’s a habit enforcer. Build daily routines, track your studies, and stay motivated with daily affirmations, school-themed environments, and a personal timetable planner. Designed to help students in Jamaica (and beyond) elevate their grades and create effective study habits.</p>
 </section>
@@ -116,6 +136,8 @@ ul li button:hover{background:darkred;}
   <hr>
   <h4>Suggestions</h4>
   <p>Contact us at <strong>forzakemail@gmail.com</strong></p>
+  <hr>
+  <button class="btn" onclick="toggleDarkMode()">Toggle Dark / Focus Mode</button>
   <button class="btn alt" onclick="closeSettings()">Close</button>
 </div>
 
@@ -152,6 +174,9 @@ function toggleNav(){document.querySelector(".nav-links").classList.toggle("open
 function openSettings(){document.getElementById("settingsPanel").classList.add("open"); filterSchools();}
 function closeSettings(){document.getElementById("settingsPanel").classList.remove("open");}
 
+// DARK MODE
+function toggleDarkMode(){document.body.classList.toggle("dark-mode");}
+
 // AFFIRMATIONS
 const affirmations = [
   "Every day you grow stronger.",
@@ -181,7 +206,7 @@ function renderPlans(){
   const ul = document.getElementById("planList"); ul.innerHTML="";
   plans.forEach((p,i)=>{
     let li=document.createElement("li"); li.textContent=p;
-    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{plans.splice(i,1);savePlans();};
+    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{plans.splice(i,1);savePlans(); notify("Plan completed: "+p);};
     li.appendChild(btn); ul.appendChild(li);
   });
 }
@@ -191,18 +216,46 @@ function addPlan(){
 }
 function savePlans(){localStorage.setItem("plans", JSON.stringify(plans)); renderPlans();}
 
+// POST-STUDY PLANNER
+let postStudyTasks = JSON.parse(localStorage.getItem("postStudyTasks"))||[];
+function renderPostStudy(){
+  const ul = document.getElementById("postStudyList");
+  ul.innerHTML="";
+  let defaultTasks = ["Iron clothes","Pack bag","Clean shoes"];
+  [...defaultTasks, ...postStudyTasks].forEach((t,i)=>{
+    let li=document.createElement("li"); li.textContent=t;
+    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{li.style.textDecoration="line-through"; notify("Post-study task done: "+t);};
+    li.appendChild(btn); ul.appendChild(li);
+  });
+}
+function addPostStudy(){
+  const input = document.getElementById("postStudyInput");
+  if(input.value.trim()){postStudyTasks.push(input.value.trim()); localStorage.setItem("postStudyTasks", JSON.stringify(postStudyTasks)); renderPostStudy(); input.value="";}
+}
+
 // TIMER
 let time=1500, interval=null;
 function updateTimer(){document.getElementById("timer").innerText=
   `${Math.floor(time/60)}:${(time%60).toString().padStart(2,"0")}`;}
-function startTimer(){if(!interval){interval=setInterval(()=>{updateTimer();time--;if(time<0){clearInterval(interval);interval=null;time=1500;updateTimer();alert("Session Complete! Take a break.");}},1000);}}
+function startTimer(){if(!interval){interval=setInterval(()=>{updateTimer();time--;if(time<0){clearInterval(interval);interval=null;notify("Study session complete! Take a break!");}},1000);}}
 function pauseTimer(){clearInterval(interval); interval=null;}
-function resetTimer(){pauseTimer(); time=1500; updateTimer();}
+function resetTimer(){pauseTimer(); updateTimer();}
+function setCustomTime(){
+  const val = parseInt(document.getElementById("customTime").value);
+  if(val>0){time = val*60; updateTimer();}
+}
+
+// NOTIFICATIONS
+function notify(message){
+  if(Notification.permission==="granted"){new Notification(message);}
+  else if(Notification.permission!=="denied"){Notification.requestPermission();}
+}
 
 // INIT
 document.addEventListener("DOMContentLoaded",()=>{
   updateTimer();
   renderPlans();
+  renderPostStudy();
 });
 </script>
 </body>

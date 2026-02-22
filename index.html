@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FocusFlow | Level Up Yuh Learning</title>
-
+<title>FocusFlow | Intelligent Study Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -27,14 +26,14 @@ body{
 background:var(--white);
 color:var(--navy-blue);
 overflow-x:hidden;
+transition:.3s;
 }
 
-/* NAVBAR */
+/* NAV */
 nav{
 position:fixed;
-width:100%;
 top:0;
-left:0;
+width:100%;
 background:var(--navy-blue);
 display:flex;
 justify-content:space-between;
@@ -44,28 +43,19 @@ z-index:1000;
 color:white;
 }
 
-.logo{
-font-weight:700;
-font-size:1.5rem;
-letter-spacing:2px;
-}
-
 nav ul{
-list-style:none;
 display:flex;
 gap:25px;
+list-style:none;
 }
 
-nav ul li a{
+nav a{
 color:white;
 text-decoration:none;
 transition:.3s;
-font-weight:500;
 }
 
-nav ul li a:hover{
-color:var(--sky-blue);
-}
+nav a:hover{color:var(--sky-blue);}
 
 /* HERO */
 .hero{
@@ -74,66 +64,47 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-text-align:center;
 background:linear-gradient(135deg,var(--true-blue),var(--sky-blue));
 color:white;
-padding:0 20px;
+text-align:center;
 position:relative;
 overflow:hidden;
 }
 
-.hero h1{
-font-size:3rem;
-animation:fadeUp 1.5s ease forwards;
-opacity:0;
-}
-
-.hero p{
-margin-top:15px;
-max-width:600px;
-animation:fadeUp 2.2s ease forwards;
-opacity:0;
-}
+.hero h1{font-size:3rem;}
 
 .btn{
-margin-top:25px;
-padding:12px 28px;
+margin-top:20px;
+padding:10px 25px;
 border:none;
-border-radius:30px;
+border-radius:25px;
 background:var(--navy-blue);
 color:white;
 cursor:pointer;
 transition:.3s;
-font-weight:600;
 }
 
 .btn:hover{
-transform:scale(1.08);
 background:white;
 color:var(--navy-blue);
+transform:scale(1.05);
 }
 
-@keyframes fadeUp{
-to{opacity:1;transform:translateY(0);}
-from{opacity:0;transform:translateY(30px);}
-}
-
-/* FLOATING CIRCLES */
-.circle{
+/* BRAIN STIMULATION ORB */
+.orb{
 position:absolute;
+width:300px;
+height:300px;
 border-radius:50%;
-background:white;
-opacity:.08;
-animation:float 8s infinite ease-in-out;
+background:radial-gradient(circle,var(--white),transparent);
+opacity:.15;
+animation:pulse 6s infinite ease-in-out;
 }
 
-.circle1{width:300px;height:300px;top:10%;left:10%;}
-.circle2{width:200px;height:200px;bottom:10%;right:15%;animation-delay:2s;}
-
-@keyframes float{
-0%{transform:translateY(0);}
-50%{transform:translateY(-40px);}
-100%{transform:translateY(0);}
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.2);}
+100%{transform:scale(1);}
 }
 
 /* SECTIONS */
@@ -147,79 +118,74 @@ background:var(--navy-blue);
 color:white;
 }
 
-/* FEATURES */
-.features-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-margin-top:50px;
+/* TIMER */
+.timer{
+font-size:2rem;
+margin-top:15px;
 }
 
-.card{
-background:var(--sky-blue);
-padding:30px;
-border-radius:20px;
-transition:.4s;
-cursor:pointer;
+.timer-buttons button{
+margin:5px;
 }
 
-.card:hover{
-background:var(--true-blue);
-color:white;
-transform:translateY(-12px) scale(1.03);
-box-shadow:0 20px 30px rgba(0,0,0,.2);
-}
-
-/* TASK MANAGER */
-.task-box{
-max-width:600px;
-margin:40px auto;
-}
-
+/* TASK */
 .task-box input{
-padding:10px;
-width:70%;
-border:2px solid var(--true-blue);
-border-radius:8px;
+padding:8px;
+width:60%;
 }
-
 .task-box button{
-padding:10px 15px;
-margin-left:10px;
-background:var(--true-blue);
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
+padding:8px 12px;
 }
-
 .task-box ul{
+margin-top:15px;
 list-style:none;
-margin-top:20px;
 text-align:left;
 }
-
 .task-box li{
-padding:10px;
-margin-bottom:8px;
+padding:8px;
+margin-bottom:5px;
 background:#f0f8ff;
-border-radius:6px;
 display:flex;
 justify-content:space-between;
 }
 
-/* TIMER */
-.timer{
-font-size:2rem;
-margin-top:20px;
-font-weight:bold;
+/* EXTENSION PANEL */
+.extension-btn{
+position:fixed;
+right:20px;
+bottom:20px;
+background:var(--navy-blue);
+color:white;
+width:50px;
+height:50px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:22px;
+cursor:pointer;
+z-index:2000;
 }
 
-/* FOOTER */
+.panel{
+position:fixed;
+right:-300px;
+top:0;
+width:300px;
+height:100%;
+background:var(--sky-blue);
+padding:20px;
+transition:.4s;
+overflow:auto;
+z-index:1500;
+}
+
+.panel.active{right:0;}
+
 footer{
 background:var(--navy-blue);
 color:white;
-padding:25px;
+padding:20px;
 text-align:center;
 }
 </style>
@@ -227,98 +193,98 @@ text-align:center;
 <body>
 
 <nav>
-<div class="logo">FocusFlow</div>
+<div><strong>FocusFlow</strong></div>
 <ul>
-<li><a href="#about">About</a></li>
-<li><a href="#tools">Study Tools</a></li>
-<li><a href="#tasks">Task Manager</a></li>
-<li><a href="#music">Lobby Music</a></li>
+<li><a href="#timerSection">Timer</a></li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#tips">Tips</a></li>
+<li><a href="#music">Music</a></li>
 </ul>
 </nav>
 
 <header class="hero">
-<div class="circle circle1"></div>
-<div class="circle circle2"></div>
-<h1>FocusFlow</h1>
-<p>Real focus. Real grades. Real improvement.  
-“Serious study time now — but wi still keep di vibe nice!”</p>
-<button class="btn" onclick="document.getElementById('tools').scrollIntoView()">Start Improving</button>
+<div class="orb"></div>
+<h1 id="heroText">Focus Hard. Elevate Grades.</h1>
+<button class="btn" onclick="scrollToSection('timerSection')">Start Studying</button>
 </header>
 
-<section id="about">
-<h2>Wah Dis?</h2>
-<p>
-FocusFlow built fi students who serious bout dem future.  
-If yuh waan better grades, less procrastination, and more confidence — dis a di place.  
-“A who nah go want level up dem grades?”
-</p>
-</section>
-
-<section id="tools" class="alt">
-<h2>Study Tools</h2>
-<div class="features-grid">
-<div class="card">
-<h3>Pomodoro Focus Timer</h3>
-<p>25 minutes hard focus. 5 minute break. Repeat. Improve memory retention.</p>
+<section id="timerSection">
+<h2>Pomodoro Focus Timer</h2>
 <div class="timer" id="timer">25:00</div>
+<div class="timer-buttons">
 <button class="btn" onclick="startTimer()">Start</button>
-</div>
-
-<div class="card">
-<h3>Smart Study Strategy</h3>
-<p>Active recall. Spaced repetition. Practice questions daily.  
-“Consistency beat cramming every time.”</p>
-</div>
-
-<div class="card">
-<h3>Goal Tracker</h3>
-<p>Set weekly grade targets and track progress. Discipline build success.</p>
-</div>
+<button class="btn" onclick="pauseTimer()">Pause</button>
+<button class="btn" onclick="resetTimer()">Reset</button>
 </div>
 </section>
 
-<section id="tasks">
+<section id="tasks" class="alt">
 <h2>Task Manager</h2>
-<p>Write wah yuh need fi do today — no more forgetting homework!</p>
-
 <div class="task-box">
-<input type="text" id="taskInput" placeholder="Add new task...">
+<input type="text" id="taskInput" placeholder="Enter task">
 <button onclick="addTask()">Add</button>
 <ul id="taskList"></ul>
+<h3>History</h3>
+<ul id="historyList"></ul>
 </div>
 </section>
 
-<section id="music" class="alt">
-<h2>Study Lobby Music</h2>
-<p>Soft lofi instrumental fi keep yuh calm and focused.</p>
-
-<audio controls loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6a4a4e5f68.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
-</audio>
+<section id="notes">
+<h2>Quick Notes</h2>
+<textarea id="notesArea" rows="6" style="width:70%;"></textarea>
+<br>
+<button class="btn" onclick="saveNotes()">Save Notes</button>
 </section>
 
+<section id="tips" class="alt">
+<h2>Study Tips</h2>
+<p>• Active recall daily  
+• Practice questions > rereading  
+• Sleep 7-8 hours  
+• Study in 25 min blocks  
+• Teach someone else what you learn</p>
+<button class="btn" onclick="newAffirmation()">Daily Motivation</button>
+<p id="affirmation"></p>
+</section>
+
+<section id="music">
+<h2>Study Lobby Music</h2>
+<iframe width="300" height="170"
+src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0"
+title="Lofi"
+frameborder="0"
+allow="autoplay; encrypted-media"
+allowfullscreen></iframe>
+</section>
+
+<div class="extension-btn" onclick="togglePanel()">⋮</div>
+
+<div class="panel" id="panel">
+<h3>Settings</h3>
+<button onclick="setLanguage('standard')">Standard English</button>
+<button onclick="setLanguage('patois')">Patois</button>
+<hr>
+<p>Brain Mode: Calm Blue theme active.</p>
+</div>
+
 <footer>
-© 2026 FocusFlow | Copyright by Zak & Micah Ltd
+© 2026 FocusFlow | Copyright Zak & Micah Ltd
 </footer>
 
 <script>
-/* TASK MANAGER */
-function addTask(){
-let input=document.getElementById("taskInput");
-let task=input.value;
-if(task==="") return;
-let li=document.createElement("li");
-li.innerHTML=task + " <button onclick='this.parentElement.remove()'>Done</button>";
-document.getElementById("taskList").appendChild(li);
-input.value="";
+function scrollToSection(id){
+document.getElementById(id).scrollIntoView();
 }
 
 /* TIMER */
 let time=1500;
 let interval;
+let running=false;
 
 function startTimer(){
-clearInterval(interval);
+if(running) return;
+running=true;
 interval=setInterval(()=>{
 let minutes=Math.floor(time/60);
 let seconds=time%60;
@@ -327,10 +293,77 @@ document.getElementById("timer").innerText=minutes+":"+seconds;
 time--;
 if(time<0){
 clearInterval(interval);
-alert("Break Time! Yuh earn it!");
+running=false;
+alert("Session Complete! Take a break.");
 time=1500;
 }
 },1000);
+}
+
+function pauseTimer(){
+clearInterval(interval);
+running=false;
+}
+
+function resetTimer(){
+clearInterval(interval);
+running=false;
+time=1500;
+document.getElementById("timer").innerText="25:00";
+}
+
+/* TASKS */
+function addTask(){
+let input=document.getElementById("taskInput");
+if(input.value==="")return;
+let li=document.createElement("li");
+li.innerHTML=input.value+" <button onclick='completeTask(this)'>Done</button>";
+document.getElementById("taskList").appendChild(li);
+input.value="";
+}
+
+function completeTask(btn){
+let text=btn.parentElement.firstChild.textContent;
+let historyItem=document.createElement("li");
+historyItem.textContent=text;
+document.getElementById("historyList").appendChild(historyItem);
+btn.parentElement.remove();
+}
+
+/* NOTES */
+function saveNotes(){
+localStorage.setItem("focusNotes",document.getElementById("notesArea").value);
+alert("Notes saved!");
+}
+window.onload=function(){
+document.getElementById("notesArea").value=localStorage.getItem("focusNotes")||"";
+}
+
+/* LANGUAGE */
+function setLanguage(mode){
+if(mode==="patois"){
+document.getElementById("heroText").innerText="Focus Strong. Mek Yuh Grades Rise!";
+}
+else{
+document.getElementById("heroText").innerText="Focus Hard. Elevate Grades.";
+}
+}
+
+/* PANEL */
+function togglePanel(){
+document.getElementById("panel").classList.toggle("active");
+}
+
+/* AFFIRMATION */
+function newAffirmation(){
+let quotes=[
+"Consistency beats cramming.",
+"Small daily improvements build massive success.",
+"Discipline today = success tomorrow.",
+"One focused hour can change your future."
+];
+document.getElementById("affirmation").innerText=
+quotes[Math.floor(Math.random()*quotes.length)];
 }
 </script>
 

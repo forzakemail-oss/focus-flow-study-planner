@@ -1,144 +1,1563 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flowbot Live AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusFlow | Intelligent Study Platform</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#ffffff; --surface:#ffffff; --muted:#f4f6fb; --text:#0b1b3a; --sub:#51607a; --border:rgba(11,27,58,0.10);
-  --brand:#1E90FF; --brand2:#0A2351; --soft:rgba(30,144,255,0.14);
-  --shadow:0 14px 35px rgba(10,35,81,0.12); --shadow2:0 10px 25px rgba(10,35,81,0.08);
-  --r:18px; --r2:12px; --navh:64px; --max:1120px;
-  --focus:0 0 0 3px rgba(30,144,255,0.35); --danger:#d64545; --ok:#1f9d55; --warn:#d78b00;
-}
-body[data-theme="dark"]{
-  --bg:#0b0f18; --surface:#0f1626; --muted:#0c1322; --text:#f4f7ff; --sub:#b7c3dd; --border:rgba(244,247,255,0.10);
-  --soft:rgba(30,144,255,0.18); --shadow:0 18px 50px rgba(0,0,0,0.45); --shadow2:0 12px 30px rgba(0,0,0,0.30);
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
-a{color:inherit;text-decoration:none;}
-button,input,select,textarea{font-family:inherit;}
-:focus-visible{outline:none;box-shadow:var(--focus);border-radius:10px;}
+  <!-- Google Identity Services (OAuth access token) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-/* Top Bar */
-.topbar{position:fixed; inset:0 0 auto 0;height:var(--navh);z-index:1000;background:linear-gradient(90deg,var(--brand2),var(--brand));color:#fff;border-bottom:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(10px);}
-.topbar-inner{max-width:var(--max);margin:0 auto;height:100%;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.brandname{font-weight:800;letter-spacing:0.2px;white-space:nowrap;}
+  <style>
+    :root{
+      --bg:#ffffff;
+      --surface:#ffffff;
+      --muted:#f4f6fb;
+      --text:#0b1b3a;
+      --sub:#51607a;
+      --border:rgba(11,27,58,0.10);
 
-/* Main */
-main{max-width:var(--max);margin:0 auto;padding:var(--navh) 16px 98px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);padding:18px;min-width:0;margin-top:16px;}
-.card h2{margin:0 0 10px;font-size:18px;letter-spacing:-0.2px}
-.input,textarea{width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:var(--muted);color:var(--text);transition:0.2s;}
-.input:focus,textarea:focus{outline:none;box-shadow:var(--focus);border-color:var(--brand);}
-.btn{border:none; cursor:pointer;padding:10px 14px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:8px;transition:0.2s;white-space:nowrap;}
-.btn-primary{background:var(--brand2);color:#fff}
-.btn-primary:hover{background:var(--brand);transform:translateY(-1px)}
-.response-box{border:1px solid var(--border);border-radius:14px;background:var(--muted);padding:12px;min-height:80px;max-height:400px;overflow-y:auto;margin-top:10px;}
-.message{margin-bottom:10px;}
-.message.user{font-weight:600;text-align:right;}
-.message.flowbot{font-weight:500;color:var(--brand);white-space:pre-wrap;}
-.loading-dot{display:inline-block;width:8px;height:8px;background:var(--brand);border-radius:50%;margin:0 2px;animation:blink 1.2s infinite;}
-@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
-</style>
+      --brand:#1E90FF;
+      --brand2:#0A2351;
+      --soft:rgba(30,144,255,0.14);
+
+      --shadow:0 14px 35px rgba(10,35,81,0.12);
+      --shadow2:0 10px 25px rgba(10,35,81,0.08);
+
+      --r:18px;
+      --r2:12px;
+      --navh:64px;
+      --max:1120px;
+
+      --focus:0 0 0 3px rgba(30,144,255,0.35);
+      --danger:#d64545;
+      --ok:#1f9d55;
+      --warn:#d78b00;
+    }
+
+    body[data-theme="dark"]{
+      --bg:#0b0f18;
+      --surface:#0f1626;
+      --muted:#0c1322;
+      --text:#f4f7ff;
+      --sub:#b7c3dd;
+      --border:rgba(244,247,255,0.10);
+      --soft:rgba(30,144,255,0.18);
+      --shadow:0 18px 50px rgba(0,0,0,0.45);
+      --shadow2:0 12px 30px rgba(0,0,0,0.30);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font-family:inherit}
+    :focus-visible{outline:none;box-shadow:var(--focus);border-radius:10px}
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+    }
+
+    /* Top Bar */
+    .topbar{
+      position:fixed; inset:0 0 auto 0;
+      height:var(--navh);
+      z-index:1000;
+      background:linear-gradient(90deg,var(--brand2),color-mix(in srgb,var(--brand2) 80%,var(--brand) 20%));
+      color:#fff;
+      border-bottom:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+    }
+    .topbar-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      height:100%;
+      padding:0 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .brandrow{
+      display:flex;align-items:center;gap:10px;
+      user-select:none;
+      min-width:0;
+    }
+    .badge{
+      width:34px;height:34px;border-radius:12px;
+      background:rgba(255,255,255,0.16);
+      display:grid;place-items:center;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);
+      flex:0 0 auto;
+    }
+    .brandname{
+      font-weight:800;
+      letter-spacing:0.2px;
+      white-space:nowrap;
+    }
+    nav.navlinks{display:flex;gap:10px;align-items:center}
+    nav.navlinks a{
+      padding:10px 10px;border-radius:12px;
+      font-size:14px;color:rgba(255,255,255,0.92);
+      transition:0.2s;
+    }
+    nav.navlinks a:hover{background:rgba(255,255,255,0.12)}
+    .iconbtn{
+      border:none;background:rgba(255,255,255,0.14);color:#fff;
+      width:40px;height:40px;border-radius:14px;
+      display:grid;place-items:center;cursor:pointer;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);
+      transition:0.2s;
+    }
+    .iconbtn:hover{background:rgba(255,255,255,0.20)}
+    .burger{display:none}
+    @media(max-width:960px){
+      nav.navlinks{display:none}
+      .burger{display:grid}
+    }
+
+    /* Drawer */
+    .backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:999;
+      opacity:0; pointer-events:none;
+      transition:0.2s;
+    }
+    .backdrop.open{opacity:1;pointer-events:auto}
+    .drawer{
+      position:fixed; top:var(--navh); right:12px;
+      width:min(92vw,380px);
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transform:translateY(-8px);
+      opacity:0; pointer-events:none;
+      transition:0.2s;
+      z-index:1001;
+    }
+    .drawer.open{transform:translateY(0);opacity:1;pointer-events:auto}
+    .drawer a{
+      display:block;padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      background:transparent;
+    }
+    .drawer a:hover{background:var(--muted)}
+    .drawer a:last-child{border-bottom:none}
+
+    /* Hero */
+    .hero{
+      padding-top:calc(var(--navh) + 18px);
+      padding-bottom:14px;
+    }
+    .hero-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:18px 16px 0;
+      display:grid;
+      grid-template-columns:1.25fr 0.75fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .hero-card{
+      border-radius:var(--r);
+      background:
+        radial-gradient(1200px 500px at 20% 10%, var(--soft), transparent 60%),
+        linear-gradient(135deg, color-mix(in srgb, var(--brand) 55%, #ffffff 45%), var(--brand2));
+      color:#fff;
+      box-shadow:var(--shadow);
+      padding:20px;
+      overflow:hidden;
+    }
+    .hero-card h1{
+      margin:0 0 8px;
+      font-size:clamp(1.6rem, 2.8vw, 2.4rem);
+      line-height:1.12;
+      letter-spacing:-0.3px;
+    }
+    .hero-card p{margin:0;opacity:0.92;max-width:70ch}
+    .hero-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:none; cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:700;
+      display:inline-flex;align-items:center;gap:8px;
+      transition:0.2s;
+      white-space:nowrap;
+    }
+    .btn-primary{background:rgba(255,255,255,0.92);color:var(--brand2)}
+    .btn-primary:hover{background:#fff;transform:translateY(-1px)}
+    .btn-ghost{
+      background:rgba(255,255,255,0.16);color:#fff;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);
+    }
+    .btn-ghost:hover{background:rgba(255,255,255,0.22);transform:translateY(-1px)}
+    .side{
+      border-radius:var(--r);
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow2);
+      padding:18px;
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px var(--soft)}
+    .hr{height:1px;background:var(--border)}
+    .hint{font-size:12.5px;color:var(--sub);line-height:1.4}
+
+    @media(max-width:960px){.hero-inner{grid-template-columns:1fr}}
+
+    /* Main */
+    main{max-width:var(--max);margin:0 auto;padding:0 16px 98px}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:14px;
+    }
+    @media(max-width:960px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      box-shadow:var(--shadow2);
+      padding:18px;
+      min-width:0;
+    }
+    .card h2{margin:0 0 10px;font-size:18px;letter-spacing:-0.2px}
+    .sub{margin:0 0 14px;color:var(--sub);font-size:13.5px;line-height:1.4}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .input,textarea,select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--muted);
+      color:var(--text);
+      transition:0.2s;
+    }
+    .row .input, .row select{flex:1;min-width:160px}
+    .input:focus,textarea:focus,select:focus{
+      outline:none;
+      box-shadow:var(--focus);
+      border-color:color-mix(in srgb,var(--brand) 45%, var(--border));
+    }
+    .btn-solid{background:var(--brand2);color:#fff}
+    .btn-solid:hover{background:color-mix(in srgb,var(--brand2) 85%, var(--brand) 15%);transform:translateY(-1px)}
+    .btn-soft{
+      background:var(--soft);
+      color:var(--text);
+      border:1px solid color-mix(in srgb,var(--brand) 30%, var(--border));
+    }
+    .btn-soft:hover{transform:translateY(-1px);background:color-mix(in srgb,var(--soft) 70%, transparent)}
+    body[data-theme="dark"] .btn-soft{color:var(--text)}
+
+    /* Timer */
+    .timer-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .ring{
+      width:130px;height:130px;border-radius:50%;
+      background:
+        conic-gradient(var(--brand) var(--p), rgba(0,0,0,0) 0),
+        radial-gradient(circle at center, var(--surface) 63%, transparent 64%),
+        radial-gradient(circle at center, var(--muted), var(--muted));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow2);
+      display:grid;place-items:center;
+      flex:0 0 auto;
+    }
+    .timer-text{font-size:24px;font-weight:800;letter-spacing:-0.5px}
+    .timer-meta{color:var(--sub);font-size:12.5px;margin-top:2px;text-align:center}
+
+    /* Lists */
+    .list{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:10px}
+    .item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 12px;border-radius:var(--r2);
+      background:var(--muted);border:1px solid var(--border);
+      min-width:0;
+    }
+    .item-left{display:flex;gap:10px;align-items:center;min-width:0}
+    .item label{display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
+    .item-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .done .item-text{text-decoration:line-through;opacity:0.78}
+    .trash{
+      border:none;background:rgba(214,69,69,0.12);color:var(--danger);
+      border-radius:12px;padding:8px 10px;cursor:pointer;transition:0.2s;
+      flex:0 0 auto;
+    }
+    .trash:hover{background:rgba(214,69,69,0.18)}
+
+    /* Message */
+    .quote-box{
+      margin-top:12px;padding:12px 14px;border-radius:var(--r2);
+      background:radial-gradient(700px 240px at 20% 10%, var(--soft), transparent 65%), var(--muted);
+      border:1px solid var(--border);
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      background:rgba(0,0,0,0.06);
+      border:1px solid var(--border);
+      font-size:12.5px;color:var(--sub);
+      margin-bottom:10px;
+    }
+    body[data-theme="dark"] .tag{background:rgba(255,255,255,0.06)}
+
+    /* Classroom */
+    .assignments{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .assignment{
+      padding:12px;border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--muted);
+    }
+    .assignment .title{font-weight:800;margin-bottom:4px}
+    .assignment .meta{color:var(--sub);font-size:12.5px;line-height:1.35}
+    .badge2{
+      display:inline-flex;align-items:center;
+      padding:4px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,0.05);
+      font-size:12px;color:var(--sub);
+    }
+    body[data-theme="dark"] .badge2{background:rgba(255,255,255,0.06)}
+    .empty{color:var(--sub);font-size:13px}
+
+    /* Search */
+    .search-grid{display:grid;grid-template-columns:1fr auto auto;gap:10px}
+    @media(max-width:520px){
+      .search-grid{grid-template-columns:1fr 1fr;grid-template-areas:"q q" "g y"}
+      #searchQuery{grid-area:q}
+      #googleSearchBtn{grid-area:g}
+      #youtubeSearchBtn{grid-area:y}
+    }
+
+    /* Modal (Account only) */
+    .fab{
+      position:fixed;right:16px;bottom:16px;
+      z-index:1100;
+      width:52px;height:52px;border-radius:18px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      display:grid;place-items:center;
+      transition:0.2s;
+    }
+    .fab:hover{transform:translateY(-2px)}
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:1200;
+      opacity:0;pointer-events:none;transition:0.2s;
+    }
+    .modal-backdrop.open{opacity:1;pointer-events:auto}
+    .modal{
+      position:fixed;right:16px;bottom:82px;
+      z-index:1201;
+      width:min(92vw, 480px);
+      max-height:min(80vh, 760px);
+      overflow:auto;
+      border-radius:20px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      transform:translateY(8px);
+      opacity:0;pointer-events:none;transition:0.2s;
+    }
+    .modal.open{transform:translateY(0);opacity:1;pointer-events:auto}
+    .modal header{
+      padding:16px 16px 10px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      position:sticky;top:0;
+      background:color-mix(in srgb, var(--surface) 86%, transparent);
+      backdrop-filter: blur(10px);
+    }
+    .modal h3{margin:0;font-size:16px;letter-spacing:-0.2px}
+    .modal .content{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px}
+    .label{font-size:13px;color:var(--sub)}
+    .sr-only{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);border:0;
+    }
+
+    /* License */
+    .license-box{
+      margin:0;padding:14px;border-radius:var(--r2);
+      background:var(--muted);
+      border:1px solid var(--border);
+      overflow:auto;max-height:360px;
+      font-size:12.5px;line-height:1.5;
+      white-space:pre-wrap;word-break:break-word;
+    }
+    body[data-theme="dark"] .license-box{
+      background:color-mix(in srgb,var(--muted) 78%, #000 22%);
+    }
+  </style>
 </head>
+
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brandname">Flowbot</div>
+  <!-- TOP BAR -->
+  <div class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brandrow">
+        <div class="badge" aria-hidden="true">⚡</div>
+        <div class="brandname">FocusFlow</div>
+      </div>
+
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#timerSection" data-i18n="nav_timer">Timer</a>
+        <a href="#plansSection" data-i18n="nav_plans">Plans</a>
+        <a href="#affirmationSection" data-i18n="nav_daily">Daily</a>
+        <a href="#searchSection" data-i18n="nav_search">Search</a>
+        <a href="#classroomSection" data-i18n="nav_classroom">Classroom</a>
+        <a href="#adSection" data-i18n="nav_ad">Ad Script</a>
+        <a href="#licenseSection" data-i18n="nav_license">License</a>
+      </nav>
+
+      <div class="row" style="gap:10px">
+        <button class="iconbtn burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+        <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<main>
-  <div class="card">
-    <h2>Ask Flowbot</h2>
-    <textarea id="userInput" class="input" rows="2" placeholder="Type your question..."></textarea>
-    <button id="sendBtn" class="btn btn-primary">Ask Flowbot</button>
-    <div id="responseBox" class="response-box"></div>
+  <!-- MOBILE DRAWER -->
+  <div class="backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+  <div class="drawer" id="drawer" role="dialog" aria-label="Navigation menu">
+    <a href="#timerSection" data-i18n="nav_timer">Timer</a>
+    <a href="#plansSection" data-i18n="nav_plans">Plans</a>
+    <a href="#affirmationSection" data-i18n="nav_daily">Daily</a>
+    <a href="#searchSection" data-i18n="nav_search">Search</a>
+    <a href="#classroomSection" data-i18n="nav_classroom">Classroom</a>
+    <a href="#adSection" data-i18n="nav_ad">Ad Script</a>
+    <a href="#licenseSection" data-i18n="nav_license">License</a>
   </div>
-</main>
 
-<script>
-const userInput = document.getElementById('userInput');
-const sendBtn = document.getElementById('sendBtn');
-const responseBox = document.getElementById('responseBox');
+  <!-- HERO -->
+  <section class="hero" aria-label="Intro">
+    <div class="hero-inner">
+      <div class="hero-card">
+        <h1 data-i18n="hero_title">Focus Hard. Elevate Your Mind.</h1>
+        <p data-i18n="hero_sub">
+          Plan your work, lock into deep focus, and keep your day clean and organized.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#timerSection" data-i18n="hero_cta">Start a Focus Session</a>
+          <button class="btn btn-ghost" id="openAccountFromHero" data-i18n="hero_account">Account</button>
+        </div>
+      </div>
 
-function appendMessage(text, sender){
-  const div = document.createElement('div');
-  div.className = 'message ' + sender;
-  div.textContent = text;
-  responseBox.appendChild(div);
-  responseBox.scrollTop = responseBox.scrollHeight;
-  return div;
-}
+      <div class="side" aria-label="Daily snapshot">
+        <div class="pill"><span class="dot" aria-hidden="true"></span><span data-i18n="today_label">Today</span></div>
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+          <div style="font-weight:800;font-size:18px" id="todayDate">—</div>
+          <div style="font-size:12.5px;color:var(--sub)" id="plansCount">0 plans</div>
+        </div>
+        <div class="hint" data-i18n="today_tip">Tip: One plan per focus block works best.</div>
+        <div class="hr"></div>
+        <div class="hint">
+          <span data-i18n="kbd_tip">Keyboard:</span>
+          <strong data-i18n="kbd_space">Space</strong> <span data-i18n="kbd_space_desc">start/pause</span>
+          • <strong data-i18n="kbd_r">R</strong> <span data-i18n="kbd_r_desc">reset</span>
+          • <strong data-i18n="kbd_esc">Esc</strong> <span data-i18n="kbd_esc_desc">close</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-// Streaming effect for Flowbot
-function typeStream(element, text){
-  element.textContent = '';
-  let i = 0;
-  const interval = setInterval(()=>{
-    element.textContent += text.charAt(i);
-    i++;
-    responseBox.scrollTop = responseBox.scrollHeight;
-    if(i>=text.length) clearInterval(interval);
-  }, 20); // 20ms per character
-}
+  <main>
+    <div class="grid">
+      <!-- TIMER -->
+      <section id="timerSection" class="card" aria-label="Pomodoro timer">
+        <h2 data-i18n="timer_title">Pomodoro / Custom Timer</h2>
+        <p class="sub" data-i18n="timer_sub">Set minutes, press start, stay locked in. The ring fills as you progress.</p>
 
-// Function to call OpenAI API with streaming
-async function getFlowbotResponse(question){
-  const API_KEY = 'YOUR_OPENAI_API_KEY'; // 🔑 Replace with your OpenAI API key
+        <div class="row">
+          <label class="sr-only" for="customTime" data-i18n="timer_minutes_label">Minutes</label>
+          <input class="input" type="number" id="customTime" placeholder="Enter minutes (e.g., 25)" min="1" inputmode="numeric" data-i18n-placeholder="timer_minutes_ph" />
+          <button class="btn btn-solid" id="setTimerBtn" data-i18n="timer_set">Set</button>
+        </div>
 
-  try {
-    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer ' + API_KEY
+        <div class="timer-wrap" style="margin-top:14px;">
+          <div class="ring" id="ring" style="--p: 0deg;" aria-label="Timer progress">
+            <div style="text-align:center">
+              <div class="timer-text" id="timerText" aria-live="polite">25:00</div>
+              <div class="timer-meta" id="timerMode" data-i18n="timer_ready">Ready</div>
+            </div>
+          </div>
+
+          <div style="flex:1; min-width: 220px;">
+            <div class="row" style="margin-bottom:10px;">
+              <button class="btn btn-solid" id="startBtn" data-i18n="timer_start">Start</button>
+              <button class="btn btn-solid" id="pauseBtn" data-i18n="timer_pause">Pause</button>
+              <button class="btn btn-solid" id="resetBtn" data-i18n="timer_reset">Reset</button>
+            </div>
+            <p class="hint" data-i18n="timer_hint">Suggested: 25 focus / 5 break. Set any minutes you want.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLANS -->
+      <section id="plansSection" class="card" aria-label="Daily plans">
+        <h2 data-i18n="plans_title">Your Plans</h2>
+        <p class="sub" data-i18n="plans_sub">Add plans for the day. Check them off as you complete.</p>
+
+        <div class="row">
+          <label class="sr-only" for="planInput" data-i18n="plans_add_label">Add a plan</label>
+          <input class="input" type="text" id="planInput" placeholder="Add a plan (e.g., Read Ch. 4 notes)" autocomplete="off" data-i18n-placeholder="plans_add_ph" />
+          <button class="btn btn-solid" id="addPlanBtn" data-i18n="plans_add">Add</button>
+        </div>
+
+        <ul class="list" id="planList" aria-label="Plan list"></ul>
+      </section>
+
+      <!-- DAILY MESSAGE -->
+      <section id="affirmationSection" class="card" aria-label="Daily affirmation or quote">
+        <h2 data-i18n="daily_title">Daily Affirmation / Quote</h2>
+        <p class="sub" data-i18n="daily_sub">Daily is saved for today (50/50 quote or affirmation). Tap “Hide” when you’re done reading.</p>
+
+        <div class="row">
+          <button class="btn btn-solid" id="dailyMsgBtn" data-i18n="daily_btn">Daily</button>
+          <button class="btn btn-soft" id="anotherMsgBtn" data-i18n="daily_another">Another</button>
+          <button class="btn btn-soft" id="hideMsgBtn" data-i18n="daily_hide">Hide</button>
+        </div>
+
+        <div class="quote-box" id="msgBox" hidden>
+          <div class="tag" id="msgTag">—</div>
+          <div style="font-weight:800; margin-bottom:6px;" data-i18n="daily_your_msg">Your message:</div>
+          <div id="msgText"></div>
+        </div>
+      </section>
+
+      <!-- SEARCH -->
+      <section id="searchSection" class="card" aria-label="Study search">
+        <h2 data-i18n="search_title">Quick Study Search</h2>
+        <p class="sub" data-i18n="search_sub">Search Google or YouTube for help with homework, lessons, or practice questions.</p>
+
+        <div class="search-grid">
+          <label class="sr-only" for="searchQuery" data-i18n="search_label">Search</label>
+          <input class="input" id="searchQuery" type="text" placeholder="Search a topic (e.g., factoring quadratics)" data-i18n-placeholder="search_ph" />
+          <button class="btn btn-solid" id="googleSearchBtn" data-i18n="search_google">Google</button>
+          <button class="btn btn-solid" id="youtubeSearchBtn" data-i18n="search_youtube">YouTube</button>
+        </div>
+
+        <p class="hint" data-i18n="search_hint">Tip: Add “CSEC”, “CAPE”, or your grade to get better results.</p>
+      </section>
+
+      <!-- CLASSROOM -->
+      <section id="classroomSection" class="card" aria-label="Google Classroom assignments">
+        <h2 data-i18n="classroom_title">Google Classroom</h2>
+        <p class="sub" data-i18n="classroom_sub">Sign in from Account, then load your outstanding assignments here.</p>
+
+        <div class="row">
+          <button class="btn btn-solid" id="loadAssignmentsBtn" data-i18n="classroom_load">Load Assignments</button>
+          <span class="badge2" id="authStatus" data-i18n="auth_signed_out">Signed out</span>
+        </div>
+
+        <div class="assignments" id="assignmentsList" aria-label="Assignments list"></div>
+        <div class="hint" id="classroomHint" style="margin-top:10px;"></div>
+      </section>
+    </div>
+
+    <!-- AD SCRIPT -->
+    <section id="adSection" class="card" style="margin-top:16px;" aria-label="Ad script">
+      <h2 data-i18n="ad_title">FocusFlow Ad Script</h2>
+      <p class="sub" data-i18n="ad_sub">A short script that explains what FocusFlow stands by.</p>
+
+      <div class="quote-box" id="adBox">
+        <div class="tag" data-i18n="ad_tag">Script</div>
+        <div id="adText" style="white-space:pre-wrap; line-height:1.55;"></div>
+      </div>
+    </section>
+
+    <!-- LICENSE -->
+    <section id="licenseSection" class="card" style="margin-top:16px;" aria-label="Software license">
+      <h2 data-i18n="license_title">License</h2>
+      <p class="sub" data-i18n="license_sub">Copyright and redistribution terms for FocusFlow.</p>
+
+      <pre class="license-box" aria-label="License text"><code>Copyright (c) 2026, forzakemail-oss
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
+    </section>
+  </main>
+
+  <!-- ACCOUNT (ONLY SETTINGS) -->
+  <button class="fab" id="accountFab" aria-label="Open account">👤</button>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"></div>
+  <aside class="modal" id="accountModal" role="dialog" aria-modal="true" aria-label="Account">
+    <header>
+      <h3 data-i18n="account_title">Account</h3>
+      <button class="iconbtn" id="closeAccountBtn" aria-label="Close account">✕</button>
+    </header>
+
+    <div class="content">
+      <!-- Language -->
+      <div>
+        <div class="label" data-i18n="account_lang">Language</div>
+        <select id="languageSelect" aria-label="Select language">
+          <option value="en">Standard English</option>
+          <option value="jam">Jamaican Creole</option>
+        </select>
+      </div>
+
+      <!-- Theme -->
+      <div>
+        <div class="label" data-i18n="account_theme">Theme</div>
+        <select id="themeSelect" aria-label="Select theme"></select>
+        <div class="hint" data-i18n="account_theme_hint">
+          Pick a school color set or a vibrant theme. Dark mode is separate (moon button).
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- Google Classroom -->
+      <div>
+        <div class="label" data-i18n="account_google">Google Classroom</div>
+        <div class="hint" id="accountHint" style="margin-top:6px;" data-i18n="account_google_hint">
+          Sign in to connect Google Classroom. Then go to the Classroom section and press “Load Assignments”.
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <button class="btn btn-solid" id="googleSignInBtn" data-i18n="account_signin">Sign in with Google</button>
+          <button class="btn btn-soft" id="googleSignOutBtn" disabled data-i18n="account_signout">Sign out</button>
+        </div>
+
+        <div class="hint" id="userLine" style="margin-top:10px;" data-i18n="account_signed_out_line">Not signed in.</div>
+        <div class="hint" style="margin-top:10px;">
+          <strong data-i18n="account_note">Note:</strong>
+          <span data-i18n="account_note_text">
+            If Google blocks Classroom calls in the browser (CORS), you may need a small backend proxy. This file still works for planning + timer either way.
+          </span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    /***********************************************************
+     * CONFIG (YOU MUST SET THIS ONE THING FOR CLASSROOM LOGIN) *
+     ***********************************************************/
+    const GOOGLE_CLIENT_ID = "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com";
+
+    const CLASSROOM_SCOPES = [
+      "https://www.googleapis.com/auth/classroom.courses.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
+    ].join(" ");
+
+    /********************
+     * SCHOOL + THEMES   *
+     ********************/
+    // School colours:
+    // Jamaica College: Navy Blue & White (wiki lists Navy Blue and White)  :contentReference[oaicite:0]{index=0}
+    // Calabar: Green & Black :contentReference[oaicite:1]{index=1}
+    // Kingston College: Purple & White :contentReference[oaicite:2]{index=2}
+    // Wolmer’s: Maroon & Gold :contentReference[oaicite:3]{index=3}
+    // St Jago: Green & Gold :contentReference[oaicite:4]{index=4}
+    // Munro: Navy Blue & Gold :contentReference[oaicite:5]{index=5}
+    // Hampton: Blue & White :contentReference[oaicite:6]{index=6}
+    // Rusea’s: Yellow, Blue & Green :contentReference[oaicite:7]{index=7}
+    // St George’s: Light Blue & White :contentReference[oaicite:8]{index=8}
+
+    const THEMES = [
+      // Schools
+      { id:"school_jc",  name:"Jamaica College (Navy/White)", brand:"#0B1F5B", brand2:"#06163A", bg:"#ffffff", soft:"rgba(11,31,91,0.14)" },
+      { id:"school_cal", name:"Calabar (Green/Black)",       brand:"#0B7A3A", brand2:"#0A1A12", bg:"#ffffff", soft:"rgba(11,122,58,0.16)" },
+      { id:"school_kc",  name:"Kingston College (Purple/White)", brand:"#6A1B9A", brand2:"#2A0B3D", bg:"#ffffff", soft:"rgba(106,27,154,0.16)" },
+      { id:"school_wol", name:"Wolmer’s (Maroon/Gold)",      brand:"#7A0C0C", brand2:"#2D0A0A", bg:"#ffffff", soft:"rgba(122,12,12,0.14)" },
+      { id:"school_jago",name:"St Jago (Green/Gold)",        brand:"#0B6E3C", brand2:"#12301F", bg:"#ffffff", soft:"rgba(11,110,60,0.16)" },
+      { id:"school_mun", name:"Munro (Navy/Gold)",           brand:"#0B1F5B", brand2:"#06163A", bg:"#ffffff", soft:"rgba(11,31,91,0.14)" },
+      { id:"school_ham", name:"Hampton (Blue/White)",        brand:"#1565C0", brand2:"#0B2A4A", bg:"#ffffff", soft:"rgba(21,101,192,0.16)" },
+      { id:"school_rus", name:"Rusea’s (Yellow/Blue/Green)", brand:"#1E63D6", brand2:"#0B2A4A", bg:"#ffffff", soft:"rgba(30,99,214,0.16)" },
+      { id:"school_stgc",name:"St George’s (Light Blue/White)", brand:"#3FA9F5", brand2:"#0B2A4A", bg:"#ffffff", soft:"rgba(63,169,245,0.18)" },
+
+      // Vibrant extra themes
+      { id:"vibrant_sunset", name:"Vibrant Sunset", brand:"#FF4D6D", brand2:"#6A00F4", bg:"#ffffff", soft:"rgba(255,77,109,0.16)" },
+      { id:"vibrant_mango",  name:"Vibrant Mango",  brand:"#FF9F1C", brand2:"#2EC4B6", bg:"#ffffff", soft:"rgba(255,159,28,0.16)" },
+      { id:"vibrant_lime",   name:"Vibrant Lime",   brand:"#2BD96B", brand2:"#14532D", bg:"#ffffff", soft:"rgba(43,217,107,0.16)" },
+      { id:"vibrant_royal",  name:"Vibrant Royal",  brand:"#3D5AFE", brand2:"#0A2351", bg:"#ffffff", soft:"rgba(61,90,254,0.16)" }
+    ];
+
+    const THEME_KEY = "ff_theme_v2";
+    const STYLE_KEY = "ff_style_v2";
+    const LANG_KEY  = "ff_lang_v2";
+
+    function applyStyleTheme(theme){
+      document.documentElement.style.setProperty("--brand", theme.brand);
+      document.documentElement.style.setProperty("--brand2", theme.brand2);
+      document.documentElement.style.setProperty("--soft", theme.soft);
+
+      // Hero gradient uses brand + brand2; keep background as var(--bg)
+    }
+
+    function loadStyleTheme(){
+      const id = localStorage.getItem(STYLE_KEY) || "vibrant_royal";
+      const found = THEMES.find(t => t.id === id) || THEMES.find(t => t.id === "vibrant_royal");
+      applyStyleTheme(found);
+      return found.id;
+    }
+
+    function saveStyleTheme(id){
+      localStorage.setItem(STYLE_KEY, id);
+      const found = THEMES.find(t => t.id === id);
+      if(found) applyStyleTheme(found);
+    }
+
+    function applyDarkLight(){
+      const saved = localStorage.getItem(THEME_KEY) || "light";
+      document.body.setAttribute("data-theme", saved);
+      document.getElementById("themeBtn").textContent = (saved === "dark") ? "☀️" : "🌙";
+    }
+
+    function toggleTheme(){
+      const cur = document.body.getAttribute("data-theme") || "light";
+      const next = (cur === "dark") ? "light" : "dark";
+      document.body.setAttribute("data-theme", next);
+      localStorage.setItem(THEME_KEY, next);
+      document.getElementById("themeBtn").textContent = (next === "dark") ? "☀️" : "🌙";
+    }
+
+    /********************
+     * I18N (EN / JAM)  *
+     ********************/
+    const I18N = {
+      en: {
+        nav_timer:"Timer", nav_plans:"Plans", nav_daily:"Daily", nav_search:"Search", nav_classroom:"Classroom", nav_ad:"Ad Script", nav_license:"License",
+        hero_title:"Focus Hard. Elevate Your Mind.",
+        hero_sub:"Plan your work, lock into deep focus, and keep your day clean and organized.",
+        hero_cta:"Start a Focus Session", hero_account:"Account",
+        today_label:"Today", today_tip:"Tip: One plan per focus block works best.",
+        kbd_tip:"Keyboard:", kbd_space:"Space", kbd_space_desc:"start/pause", kbd_r:"R", kbd_r_desc:"reset", kbd_esc:"Esc", kbd_esc_desc:"close",
+
+        timer_title:"Pomodoro / Custom Timer",
+        timer_sub:"Set minutes, press start, stay locked in. The ring fills as you progress.",
+        timer_minutes_ph:"Enter minutes (e.g., 25)",
+        timer_set:"Set",
+        timer_ready:"Ready",
+        timer_start:"Start", timer_pause:"Pause", timer_reset:"Reset",
+        timer_hint:"Suggested: 25 focus / 5 break. Set any minutes you want.",
+
+        plans_title:"Your Plans",
+        plans_sub:"Add plans for the day. Check them off as you complete.",
+        plans_add_ph:"Add a plan (e.g., Read Ch. 4 notes)",
+        plans_add:"Add",
+
+        daily_title:"Daily Affirmation / Quote",
+        daily_sub:"Daily is saved for today (50/50 quote or affirmation). Tap “Hide” when you’re done reading.",
+        daily_btn:"Daily", daily_another:"Another", daily_hide:"Hide",
+        daily_your_msg:"Your message:",
+
+        search_title:"Quick Study Search",
+        search_sub:"Search Google or YouTube for help with homework, lessons, or practice questions.",
+        search_ph:"Search a topic (e.g., factoring quadratics)",
+        search_google:"Google", search_youtube:"YouTube",
+        search_hint:"Tip: Add “CSEC”, “CAPE”, or your grade to get better results.",
+
+        classroom_title:"Google Classroom",
+        classroom_sub:"Sign in from Account, then load your outstanding assignments here.",
+        classroom_load:"Load Assignments",
+        auth_signed_out:"Signed out",
+
+        ad_title:"FocusFlow Ad Script",
+        ad_sub:"A short script that explains what FocusFlow stands by.",
+        ad_tag:"Script",
+
+        license_title:"License",
+        license_sub:"Copyright and redistribution terms for FocusFlow.",
+
+        account_title:"Account",
+        account_lang:"Language",
+        account_theme:"Theme",
+        account_theme_hint:"Pick a school color set or a vibrant theme. Dark mode is separate (moon button).",
+        account_google:"Google Classroom",
+        account_google_hint:"Sign in to connect Google Classroom. Then go to the Classroom section and press “Load Assignments”.",
+        account_signin:"Sign in with Google",
+        account_signout:"Sign out",
+        account_signed_out_line:"Not signed in.",
+        account_note:"Note:",
+        account_note_text:"If Google blocks Classroom calls in the browser (CORS), you may need a small backend proxy. This file still works for planning + timer either way.",
+
+        timer_complete_alert:"Session complete! Take a break.",
+        classroom_need_signin:"You’re signed out or token expired. Open Account and sign in again."
       },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: question }],
-        temperature: 0.7,
-        max_tokens: 500
-      })
+
+      jam: {
+        nav_timer:"Taimah", nav_plans:"Plan Dem", nav_daily:"Daily", nav_search:"Search", nav_classroom:"Classroom", nav_ad:"Ad Script", nav_license:"License",
+        hero_title:"Focus Strong. Mek Yuh Grades Rise!",
+        hero_sub:"Plan yuh work, lock in pon focus, an keep yuh day clean an organised.",
+        hero_cta:"Start One Focus Session", hero_account:"Account",
+        today_label:"Tudeh", today_tip:"Tip: One plan fi one focus block work di best.",
+        kbd_tip:"Keyboard:", kbd_space:"Space", kbd_space_desc:"start/pause", kbd_r:"R", kbd_r_desc:"reset", kbd_esc:"Esc", kbd_esc_desc:"close",
+
+        timer_title:"Pomodoro / Custom Taimah",
+        timer_sub:"Set di minutes, press start, an lock in. Di ring fill up as yuh go.",
+        timer_minutes_ph:"Put minutes (ex: 25)",
+        timer_set:"Set",
+        timer_ready:"Ready",
+        timer_start:"Start", timer_pause:"Pause", timer_reset:"Reset",
+        timer_hint:"Suggestion: 25 focus / 5 break. Set any minutes yuh waan.",
+
+        plans_title:"Yuh Plan Dem",
+        plans_sub:"Add plan fi di day. Tick dem off wen yuh done.",
+        plans_add_ph:"Add one plan (ex: Read Ch. 4 notes)",
+        plans_add:"Add",
+
+        daily_title:"Daily Affirmation / Quote",
+        daily_sub:"Daily save fi today (50/50 quote or affirmation). Tap “Hide” wen yuh done read it.",
+        daily_btn:"Daily", daily_another:"One Next", daily_hide:"Hide",
+        daily_your_msg:"Yuh message:",
+
+        search_title:"Quick Study Search",
+        search_sub:"Search Google or YouTube fi help wid homework, lesson, or practice question.",
+        search_ph:"Search one topic (ex: factoring quadratics)",
+        search_google:"Google", search_youtube:"YouTube",
+        search_hint:"Tip: Add “CSEC”, “CAPE”, or yuh grade fi get better results.",
+
+        classroom_title:"Google Classroom",
+        classroom_sub:"Sign in from Account, then load yuh outstanding assignment dem yah so.",
+        classroom_load:"Load Assignment Dem",
+        auth_signed_out:"No sign in",
+
+        ad_title:"FocusFlow Ad Script",
+        ad_sub:"One short script weh show weh FocusFlow stand by.",
+        ad_tag:"Script",
+
+        license_title:"License",
+        license_sub:"Copyright an redistribution terms fi FocusFlow.",
+
+        account_title:"Account",
+        account_lang:"Language",
+        account_theme:"Theme",
+        account_theme_hint:"Pick school colour set or one vibrant theme. Dark mode separate (moon button).",
+        account_google:"Google Classroom",
+        account_google_hint:"Sign in fi connect Google Classroom. Then go a Classroom section an press “Load Assignments”.",
+        account_signin:"Sign in wid Google",
+        account_signout:"Sign out",
+        account_signed_out_line:"No sign in.",
+        account_note:"Note:",
+        account_note_text:"If Google block Classroom call dem inna browser (CORS), yuh might need one small backend proxy. Dis file still work fi planning + taimah either way.",
+
+        timer_complete_alert:"Session done! Tek one likkle break.",
+        classroom_need_signin:"Yuh no sign in or token done. Open Account an sign in again."
+      }
+    };
+
+    function t(key){
+      const lang = localStorage.getItem(LANG_KEY) || "en";
+      return (I18N[lang] && I18N[lang][key]) ? I18N[lang][key] : (I18N.en[key] || key);
+    }
+
+    function applyLanguage(lang){
+      localStorage.setItem(LANG_KEY, lang);
+
+      // Update all i18n text nodes
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const k = el.getAttribute("data-i18n");
+        el.textContent = t(k);
+      });
+
+      // Update placeholders
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
+        const k = el.getAttribute("data-i18n-placeholder");
+        el.setAttribute("placeholder", t(k));
+      });
+
+      // Auth status chip
+      if(!accessToken || Date.now() >= tokenExpiresAt){
+        authStatus.textContent = t("auth_signed_out");
+      }
+
+      // Ad text language swap
+      adText.textContent = (lang === "jam") ? AD_JAM : AD_EN;
+
+      // Timer mode labels
+      if(timerState === "ready") timerMode.textContent = t("timer_ready");
+      if(timerState === "paused") timerMode.textContent = (lang === "jam") ? "Pause" : "Paused";
+      if(timerState === "complete") timerMode.textContent = (lang === "jam") ? "Done ✅" : "Complete ✅";
+
+      // Plans count label
+      updatePlansCount();
+    }
+
+    /********************
+     * AD SCRIPT TEXT    *
+     ********************/
+    const AD_JAM = `You ever sit down to study and just feel lost?
+Homework everywhere… tests coming… brain tired?
+
+What if studying could feel calm?
+What if passing exams felt possible?
+A who nah go want dat?
+
+Introducing FocusFlow Study Planner.
+Real help. Real organisation. Real results.
+
+With FocusFlow, yuh can plan yuh homework, track tests, and study likkle by likkle every day.
+No more last minute panic.
+No more “Miss, mi forget.”
+No more stress.
+
+Real focus. Real confidence. Real success.
+
+Other apps try to do everything.
+FocusFlow does what students ACTUALLY need.
+Simple.
+Clear.
+Made for we.
+
+Because every student deserves a chance to succeed.
+Download FocusFlow today.
+Plan smart.
+Study calm.
+Pass exams.
+
+FocusFlow — your future starts here.`;
+
+    const AD_EN = `Ever sit down to study and feel completely lost?
+Homework everywhere… tests coming… your mind tired?
+
+What if studying could feel calm?
+What if passing exams felt possible?
+
+Introducing FocusFlow Study Planner.
+Real help. Real organization. Real results.
+
+With FocusFlow, you can plan your homework, track tests, and study a little each day.
+No more last-minute panic.
+No more “Miss, I forgot.”
+No more stress.
+
+Real focus. Real confidence. Real success.
+
+Other apps try to do everything.
+FocusFlow does what students ACTUALLY need.
+Simple.
+Clear.
+Made for us.
+
+Because every student deserves a chance to succeed.
+Download FocusFlow today.
+Plan smart.
+Study calm.
+Pass exams.
+
+FocusFlow — your future starts here.`;
+
+    /********************
+     * NAV / DRAWER      *
+     ********************/
+    const burgerBtn = document.getElementById("burgerBtn");
+    const drawer = document.getElementById("drawer");
+    const drawerBackdrop = document.getElementById("drawerBackdrop");
+
+    function openDrawer(){
+      drawer.classList.add("open");
+      drawerBackdrop.classList.add("open");
+      burgerBtn.setAttribute("aria-expanded","true");
+    }
+    function closeDrawer(){
+      drawer.classList.remove("open");
+      drawerBackdrop.classList.remove("open");
+      burgerBtn.setAttribute("aria-expanded","false");
+    }
+    burgerBtn.addEventListener("click", () => drawer.classList.contains("open") ? closeDrawer() : openDrawer());
+    drawerBackdrop.addEventListener("click", closeDrawer);
+    drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", closeDrawer));
+
+    /********************
+     * THEME (DARK/LIGHT)*
+     ********************/
+    const themeBtn = document.getElementById("themeBtn");
+    themeBtn.addEventListener("click", toggleTheme);
+
+    /********************
+     * ACCOUNT MODAL     *
+     ********************/
+    const accountFab = document.getElementById("accountFab");
+    const openAccountFromHero = document.getElementById("openAccountFromHero");
+    const accountModal = document.getElementById("accountModal");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const closeAccountBtn = document.getElementById("closeAccountBtn");
+    let lastFocusEl = null;
+
+    function openAccount(){
+      lastFocusEl = document.activeElement;
+      accountModal.classList.add("open");
+      modalBackdrop.classList.add("open");
+      modalBackdrop.setAttribute("aria-hidden","false");
+      document.getElementById("languageSelect").focus();
+    }
+    function closeAccount(){
+      accountModal.classList.remove("open");
+      modalBackdrop.classList.remove("open");
+      modalBackdrop.setAttribute("aria-hidden","true");
+      if(lastFocusEl) lastFocusEl.focus();
+    }
+    accountFab.addEventListener("click", openAccount);
+    openAccountFromHero.addEventListener("click", openAccount);
+    closeAccountBtn.addEventListener("click", closeAccount);
+    modalBackdrop.addEventListener("click", closeAccount);
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        closeAccount();
+        closeDrawer();
+      }
     });
-    const data = await resp.json();
-    return data.choices[0].message.content.trim();
-  } catch(e){
-    console.error(e);
-    return "Flowbot encountered an error. Make sure your API key is correct.";
-  }
-}
 
-sendBtn.addEventListener('click', async () => {
-  const question = userInput.value.trim();
-  if(!question) return;
-  appendMessage(question, 'user');
-  userInput.value = '';
+    /********************
+     * TODAY             *
+     ********************/
+    function updateToday(){
+      const d = new Date();
+      document.getElementById("todayDate").textContent =
+        d.toLocaleDateString(undefined, { weekday:"long", year:"numeric", month:"short", day:"numeric" });
+    }
 
-  const flowDiv = appendMessage('', 'flowbot');
+    /********************
+     * PLANS             *
+     ********************/
+    const planInput = document.getElementById("planInput");
+    const addPlanBtn = document.getElementById("addPlanBtn");
+    const planList = document.getElementById("planList");
+    const plansCount = document.getElementById("plansCount");
+    const PLANS_KEY = "ff_plans_v2";
+    let plans = [];
 
-  // Add temporary loading dots
-  flowDiv.innerHTML = '<span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>';
-  
-  const flowResp = await getFlowbotResponse(question);
-  typeStream(flowDiv, flowResp);
-});
+    function loadPlans(){
+      try{ plans = JSON.parse(localStorage.getItem(PLANS_KEY) || "[]"); }
+      catch(e){ plans = []; }
+    }
+    function savePlans(){
+      localStorage.setItem(PLANS_KEY, JSON.stringify(plans));
+      renderPlans();
+    }
+    function updatePlansCount(){
+      const remaining = plans.filter(p => !p.done).length;
+      const lang = localStorage.getItem(LANG_KEY) || "en";
+      if(lang === "jam"){
+        plansCount.textContent = `${remaining} plan`;
+      } else {
+        plansCount.textContent = `${remaining} plan${remaining===1?"":"s"}`;
+      }
+    }
+    function renderPlans(){
+      planList.innerHTML = "";
+      updatePlansCount();
 
-userInput.addEventListener('keydown', e => {
-  if(e.key === 'Enter' && !e.shiftKey){
-    e.preventDefault();
-    sendBtn.click();
-  }
-});
-</script>
+      plans.forEach((p,i)=>{
+        const li = document.createElement("li");
+        li.className = "item" + (p.done ? " done" : "");
+        li.innerHTML = `
+          <div class="item-left">
+            <label>
+              <input type="checkbox" ${p.done ? "checked" : ""} aria-label="Mark plan done">
+              <span class="item-text">${escapeHtml(p.text)}</span>
+            </label>
+          </div>
+          <button class="trash" aria-label="Delete plan">🗑</button>
+        `;
+        li.querySelector("input").addEventListener("change",(e)=>{
+          plans[i].done = e.target.checked;
+          savePlans();
+        });
+        li.querySelector(".trash").addEventListener("click",()=>{
+          plans.splice(i,1);
+          savePlans();
+        });
+        planList.appendChild(li);
+      });
+    }
+    function addPlan(){
+      const text = planInput.value.trim();
+      if(!text) return;
+      plans.unshift({text, done:false});
+      planInput.value = "";
+      savePlans();
+    }
+    addPlanBtn.addEventListener("click", addPlan);
+    planInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter") addPlan(); });
+
+    /********************
+     * TIMER             *
+     ********************/
+    const ring = document.getElementById("ring");
+    const timerText = document.getElementById("timerText");
+    const timerMode = document.getElementById("timerMode");
+    const customTime = document.getElementById("customTime");
+    const setTimerBtn = document.getElementById("setTimerBtn");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let defaultTime = 25*60;
+    let time = defaultTime;
+    let interval = null;
+    let timerState = "ready"; // ready | running | paused | complete
+
+    function formatTime(sec){
+      const m = Math.floor(sec/60);
+      const s = String(sec%60).padStart(2,"0");
+      return `${m}:${s}`;
+    }
+    function updateRing(){
+      const total = defaultTime || 1;
+      const progress = Math.max(0, Math.min(1, (total - time)/total));
+      ring.style.setProperty("--p", `${progress*360}deg`);
+      timerText.textContent = formatTime(time);
+    }
+    function startTimer(){
+      if(interval) return;
+      timerState = "running";
+      timerMode.textContent = (localStorage.getItem(LANG_KEY) === "jam") ? "A focus…" : "Focusing…";
+      interval = setInterval(()=>{
+        if(time <= 0){
+          time = 0;
+          updateRing();
+          clearInterval(interval);
+          interval = null;
+          timerState = "complete";
+          timerMode.textContent = (localStorage.getItem(LANG_KEY) === "jam") ? "Done ✅" : "Complete ✅";
+          alert(t("timer_complete_alert"));
+          return;
+        }
+        time--;
+        updateRing();
+      }, 1000);
+    }
+    function pauseTimer(){
+      if(interval){ clearInterval(interval); interval = null; }
+      timerState = "paused";
+      timerMode.textContent = (localStorage.getItem(LANG_KEY) === "jam") ? "Pause" : "Paused";
+    }
+    function resetTimer(){
+      pauseTimer();
+      time = defaultTime;
+      timerState = "ready";
+      timerMode.textContent = t("timer_ready");
+      updateRing();
+    }
+    function setCustomTime(){
+      const val = parseInt(customTime.value,10);
+      if(!val || val < 1) return;
+      pauseTimer();
+      defaultTime = val*60;
+      time = defaultTime;
+      timerState = "ready";
+      timerMode.textContent = t("timer_ready");
+      updateRing();
+    }
+    setTimerBtn.addEventListener("click", setCustomTime);
+    startBtn.addEventListener("click", startTimer);
+    pauseBtn.addEventListener("click", pauseTimer);
+    resetBtn.addEventListener("click", resetTimer);
+
+    document.addEventListener("keydown",(e)=>{
+      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      if(["INPUT","TEXTAREA","SELECT"].includes(tag)) return;
+
+      if(e.code === "Space"){
+        e.preventDefault();
+        interval ? pauseTimer() : startTimer();
+      }
+      if(e.key.toLowerCase() === "r"){
+        resetTimer();
+      }
+    });
+
+    /********************
+     * DAILY MESSAGE     *
+     ********************/
+    const dailyMsgBtn = document.getElementById("dailyMsgBtn");
+    const anotherMsgBtn = document.getElementById("anotherMsgBtn");
+    const hideMsgBtn = document.getElementById("hideMsgBtn");
+    const msgBox = document.getElementById("msgBox");
+    const msgText = document.getElementById("msgText");
+    const msgTag = document.getElementById("msgTag");
+
+    // Endless-ish: pull from big pools + allow future additions
+    const affirmations = [
+      "Small steps every day become big wins.",
+      "Progress over perfection.",
+      "You can do hard things.",
+      "Consistency beats intensity.",
+      "One task at a time.",
+      "Start now. Adjust later.",
+      "Discipline today = success tomorrow.",
+      "Your effort matters.",
+      "You’re improving every session.",
+      "Keep going. Your future self will thank you.",
+      "Focus is a skill — build it daily.",
+      "Your mind is powerful. Train it."
+    ];
+    const quotes = [
+      "“It always seems impossible until it’s done.” — Nelson Mandela",
+      "“The secret of getting ahead is getting started.” — Mark Twain",
+      "“Don’t watch the clock; do what it does. Keep going.” — Sam Levenson",
+      "“The future depends on what you do today.” — Mahatma Gandhi",
+      "“Start where you are. Use what you have. Do what you can.” — Arthur Ashe",
+      "“A little progress each day adds up to big results.” — Satya Nani",
+      "“Success is the sum of small efforts repeated day in and day out.” — Robert Collier",
+      "“Well done is better than well said.” — Benjamin Franklin",
+      "“If you can dream it, you can do it.” — Walt Disney",
+      "“You don’t have to be great to start, but you have to start to be great.” — Zig Ziglar"
+    ];
+
+    function dailyKey(){
+      const today = new Date().toISOString().split("T")[0];
+      return `ff_daily_msg_${today}`;
+    }
+    function pickMessage(){
+      const kind = (Math.random() < 0.5) ? "Affirmation" : "Quote";
+      const pool = (kind === "Quote") ? quotes : affirmations;
+      const text = pool[Math.floor(Math.random()*pool.length)];
+      return {kind,text};
+    }
+    function showMessage(msg){
+      const lang = localStorage.getItem(LANG_KEY) || "en";
+      // Translate labels only; keep quotes/affirmations as-is (many are authored in English)
+      msgTag.textContent = (lang === "jam")
+        ? (msg.kind === "Quote" ? "Quote" : "Affirmation")
+        : msg.kind;
+      msgText.textContent = msg.text;
+      msgBox.hidden = false;
+    }
+    function showDaily(){
+      const key = dailyKey();
+      let msg = null;
+      try{ const raw = localStorage.getItem(key); if(raw) msg = JSON.parse(raw); }catch(e){}
+      if(!msg || !msg.text || !msg.kind){
+        msg = pickMessage();
+        localStorage.setItem(key, JSON.stringify(msg));
+      }
+      showMessage(msg);
+    }
+    dailyMsgBtn.addEventListener("click", showDaily);
+    anotherMsgBtn.addEventListener("click", ()=>showMessage(pickMessage()));
+    hideMsgBtn.addEventListener("click", ()=>{ msgBox.hidden = true; });
+
+    /********************
+     * QUICK SEARCH      *
+     ********************/
+    const searchQuery = document.getElementById("searchQuery");
+    const googleSearchBtn = document.getElementById("googleSearchBtn");
+    const youtubeSearchBtn = document.getElementById("youtubeSearchBtn");
+
+    function openSearch(engine){
+      const q = searchQuery.value.trim();
+      if(!q) return;
+      const url = (engine === "youtube")
+        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
+        : `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+    googleSearchBtn.addEventListener("click", ()=>openSearch("google"));
+    youtubeSearchBtn.addEventListener("click", ()=>openSearch("youtube"));
+    searchQuery.addEventListener("keydown",(e)=>{ if(e.key==="Enter") openSearch("google"); });
+
+    /********************
+     * GOOGLE AUTH       *
+     ********************/
+    const googleSignInBtn = document.getElementById("googleSignInBtn");
+    const googleSignOutBtn = document.getElementById("googleSignOutBtn");
+    const authStatus = document.getElementById("authStatus");
+    const userLine = document.getElementById("userLine");
+
+    const SESSION_TOKEN_KEY = "ff_access_token_v2";
+    const SESSION_EXP_KEY = "ff_access_exp_v2";
+    let accessToken = null;
+    let tokenExpiresAt = 0;
+    let tokenClient = null;
+
+    function requireClientId(){
+      if(!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.includes("PASTE_")){
+        alert("Set GOOGLE_CLIENT_ID in this index.html first (Google Cloud Console OAuth Client ID).");
+        return false;
+      }
+      return true;
+    }
+
+    function setSignedOutUI(){
+      accessToken = null;
+      tokenExpiresAt = 0;
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+      sessionStorage.removeItem(SESSION_EXP_KEY);
+
+      authStatus.textContent = t("auth_signed_out");
+      userLine.textContent = t("account_signed_out_line");
+
+      googleSignInBtn.disabled = false;
+      googleSignOutBtn.disabled = true;
+    }
+
+    function setSignedInUI(){
+      authStatus.textContent = (localStorage.getItem(LANG_KEY)==="jam") ? "Sign in ✅" : "Signed in ✅";
+      userLine.textContent = (localStorage.getItem(LANG_KEY)==="jam")
+        ? "Yuh sign in (token active)."
+        : "Signed in (token active).";
+
+      googleSignInBtn.disabled = true;
+      googleSignOutBtn.disabled = false;
+    }
+
+    function loadSessionToken(){
+      const tok = sessionStorage.getItem(SESSION_TOKEN_KEY);
+      const exp = parseInt(sessionStorage.getItem(SESSION_EXP_KEY) || "0", 10);
+      if(tok && exp && Date.now() < exp){
+        accessToken = tok;
+        tokenExpiresAt = exp;
+        setSignedInUI();
+      } else {
+        setSignedOutUI();
+      }
+    }
+
+    function initTokenClient(){
+      return google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: CLASSROOM_SCOPES,
+        prompt: "consent",
+        callback: (resp) => {
+          if(resp && resp.access_token){
+            accessToken = resp.access_token;
+            const expiresMs = (resp.expires_in || 3600) * 1000;
+            tokenExpiresAt = Date.now() + expiresMs - 15000;
+            sessionStorage.setItem(SESSION_TOKEN_KEY, accessToken);
+            sessionStorage.setItem(SESSION_EXP_KEY, String(tokenExpiresAt));
+            setSignedInUI();
+          } else {
+            alert((localStorage.getItem(LANG_KEY)==="jam") ? "Sign-in fail. Try again." : "Sign-in failed. Try again.");
+          }
+        }
+      });
+    }
+
+    googleSignInBtn.addEventListener("click", ()=>{
+      if(!requireClientId()) return;
+      tokenClient = tokenClient || initTokenClient();
+      tokenClient.requestAccessToken();
+    });
+
+    googleSignOutBtn.addEventListener("click", ()=>{
+      try{
+        if(accessToken && google?.accounts?.oauth2){
+          google.accounts.oauth2.revoke(accessToken, () => {});
+        }
+      }catch(e){}
+      setSignedOutUI();
+    });
+
+    /********************
+     * CLASSROOM LOAD    *
+     ********************/
+    const loadAssignmentsBtn = document.getElementById("loadAssignmentsBtn");
+    const assignmentsList = document.getElementById("assignmentsList");
+    const classroomHint = document.getElementById("classroomHint");
+
+    async function gapi(path){
+      const res = await fetch(`https://classroom.googleapis.com/v1/${path}`, {
+        headers: { "Authorization": `Bearer ${accessToken}` }
+      });
+      if(!res.ok){
+        const txt = await res.text();
+        throw new Error(`Google API error ${res.status}: ${txt}`);
+      }
+      return res.json();
+    }
+
+    function toDueISO(dueDate, dueTime){
+      if(!dueDate) return null;
+      const y = dueDate.year;
+      const m = String(dueDate.month || 1).padStart(2, "0");
+      const d = String(dueDate.day || 1).padStart(2, "0");
+      const hh = String(dueTime?.hours ?? 23).padStart(2, "0");
+      const mm = String(dueTime?.minutes ?? 59).padStart(2, "0");
+      return `${y}-${m}-${d}T${hh}:${mm}:00`;
+    }
+
+    function renderAssignments(items){
+      assignmentsList.innerHTML = "";
+      if(!items || !items.length){
+        assignmentsList.innerHTML = `<div class="empty">${(localStorage.getItem(LANG_KEY)==="jam") ? "No outstanding assignment find." : "No outstanding assignments found."}</div>`;
+        return;
+      }
+      items.forEach(a=>{
+        const div = document.createElement("div");
+        div.className = "assignment";
+        const due = a.dueDateTime ? new Date(a.dueDateTime).toLocaleString() : ((localStorage.getItem(LANG_KEY)==="jam") ? "No due date" : "No due date");
+        const course = a.courseName || ((localStorage.getItem(LANG_KEY)==="jam") ? "Course" : "Course");
+        const title = a.title || ((localStorage.getItem(LANG_KEY)==="jam") ? "No title" : "Untitled");
+        const link = a.link || "";
+        const status = a.submissionState || "NEW";
+        div.innerHTML = `
+          <div class="title">${escapeHtml(title)}</div>
+          <div class="meta">${escapeHtml(course)} • ${(localStorage.getItem(LANG_KEY)==="jam") ? "Due:" : "Due:"} ${escapeHtml(due)}</div>
+          <div class="meta">${(localStorage.getItem(LANG_KEY)==="jam") ? "Status:" : "Status:"} ${escapeHtml(status)}</div>
+          ${link ? `<div class="meta"><a href="${escapeAttr(link)}" target="_blank" rel="noopener noreferrer">${(localStorage.getItem(LANG_KEY)==="jam") ? "Open in Classroom" : "Open in Classroom"}</a></div>` : ""}
+        `;
+        assignmentsList.appendChild(div);
+      });
+    }
+
+    async function fetchAssignments(){
+      classroomHint.textContent = "";
+      assignmentsList.innerHTML = `<div class="empty">${(localStorage.getItem(LANG_KEY)==="jam") ? "Loading…" : "Loading…"}</div>`;
+
+      if(!accessToken || Date.now() >= tokenExpiresAt){
+        assignmentsList.innerHTML = "";
+        classroomHint.textContent = t("classroom_need_signin");
+        return;
+      }
+
+      try{
+        // 1) Courses
+        const coursesData = await gapi("courses?courseStates=ACTIVE&pageSize=50");
+        const courses = (coursesData.courses || []).slice(0, 25);
+
+        const results = [];
+
+        // 2) Coursework + submissions (simple sequential to keep it stable on mobile)
+        for(const c of courses){
+          const courseId = c.id;
+          const courseName = c.name || "Course";
+          const cwData = await gapi(`courses/${courseId}/courseWork?pageSize=50`);
+          const courseWork = (cwData.courseWork || []).slice(0, 50);
+
+          for(const cw of courseWork){
+            const cwId = cw.id;
+            const subData = await gapi(`courses/${courseId}/courseWork/${cwId}/studentSubmissions?userId=me&pageSize=10`);
+            const subs = subData.studentSubmissions || [];
+            const state = subs[0]?.state || "NEW";
+
+            // Outstanding: not TURNED_IN or RETURNED
+            if(state !== "TURNED_IN" && state !== "RETURNED"){
+              results.push({
+                courseId,
+                courseName,
+                title: cw.title || "Untitled",
+                dueDateTime: toDueISO(cw.dueDate, cw.dueTime),
+                link: cw.alternateLink || null,
+                submissionState: state
+              });
+            }
+          }
+        }
+
+        results.sort((a,b)=>{
+          const ad = a.dueDateTime ? Date.parse(a.dueDateTime) : Infinity;
+          const bd = b.dueDateTime ? Date.parse(b.dueDateTime) : Infinity;
+          return ad - bd;
+        });
+
+        renderAssignments(results.slice(0, 100));
+
+      }catch(err){
+        assignmentsList.innerHTML = "";
+        classroomHint.textContent =
+          (localStorage.getItem(LANG_KEY)==="jam")
+            ? ("Error: " + (err?.message || err))
+            : ("Error: " + (err?.message || err));
+      }
+    }
+
+    loadAssignmentsBtn.addEventListener("click", fetchAssignments);
+
+    /********************
+     * THEME PICKER UI   *
+     ********************/
+    const themeSelect = document.getElementById("themeSelect");
+    const languageSelect = document.getElementById("languageSelect");
+    const adText = document.getElementById("adText");
+
+    function buildThemeSelect(){
+      themeSelect.innerHTML = "";
+      THEMES.forEach(t=>{
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.name;
+        themeSelect.appendChild(opt);
+      });
+
+      const current = loadStyleTheme();
+      themeSelect.value = current;
+
+      themeSelect.addEventListener("change", ()=>{
+        saveStyleTheme(themeSelect.value);
+      });
+    }
+
+    languageSelect.addEventListener("change", ()=>{
+      applyLanguage(languageSelect.value);
+    });
+
+    /********************
+     * HELPERS + INIT    *
+     ********************/
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+    function escapeAttr(str){ return String(str).replace(/"/g, "&quot;"); }
+
+    (function init(){
+      // Dark/light
+      applyDarkLight();
+      // Style theme
+      buildThemeSelect();
+
+      // Date + plans
+      updateToday();
+      loadPlans();
+      renderPlans();
+
+      // Timer
+      updateRing();
+      timerMode.textContent = t("timer_ready");
+
+      // Daily message auto-show once (but user can hide)
+      showDaily();
+
+      // Classroom auth session restore
+      loadSessionToken();
+
+      // Language restore + apply everywhere
+      const savedLang = localStorage.getItem(LANG_KEY) || "en";
+      languageSelect.value = savedLang;
+      adText.textContent = (savedLang === "jam") ? AD_JAM : AD_EN;
+      applyLanguage(savedLang);
+    })();
+  </script>
 </body>
 </html>

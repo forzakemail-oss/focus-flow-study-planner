@@ -1,246 +1,1579 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FocusFlow | Intelligent Study Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --primary:#ffffff;
-  --text:#0B3D91;
-  --accent:#1E90FF;
-  --dark:#0A2351;
-  --bg-dark:#121212;
-  --text-dark:#ffffff;
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:var(--primary);color:var(--text);overflow-x:hidden;transition:0.3s;}
-.top-nav{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dark);color:white;position:fixed;width:100%;z-index:1000;transition:0.3s;}
-.burger{display:none;font-size:24px;background:none;border:none;color:white;cursor:pointer;}
-.nav-links{list-style:none;display:flex;gap:15px;}
-.nav-links li a{color:white;text-decoration:none;transition:.3s;}
-.nav-links li a:hover{color:var(--accent);}
-@media(max-width:768px){
-  .burger{display:block;}
-  .nav-links{display:none;flex-direction:column;background:var(--dark);position:absolute;top:50px;width:100%;padding:10px 0;}
-  .nav-links.open{display:flex;}
-}
-.hero{height:40vh;display:flex;justify-content:center;align-items:center;background:var(--accent);color:white;text-align:center;padding:0 10px;margin-top:50px;transition:0.3s;border-radius:0;}
-.section{padding:30px;text-align:center;transition:0.3s;max-width:900px;margin:auto;}
-.alt{background:#f7f7f7;}
-.btn{padding:10px 20px;border:none;background:var(--dark);color:white;border-radius:25px;cursor:pointer;margin:5px;transition:.3s;font-weight:600;}
-.btn:hover{background:var(--accent);}
-.settings-btn{position:fixed;bottom:20px;right:20px;padding:15px;border-radius:50%;background:var(--dark);color:white;cursor:pointer;z-index:1500;}
-.settings-panel{position:fixed;right:-400px;top:0;width:350px;height:100%;background:#fafafa;padding:20px;overflow:auto;transition:.3s;box-shadow:-2px 0 8px rgba(0,0,0,0.2);border-left:1px solid #ddd;}
-.settings-panel.open{right:0;}
-#schoolList{list-style:none;max-height:150px;overflow:auto;padding:0;margin:5px 0;}
-#schoolList li{padding:8px;cursor:pointer;border-bottom:1px solid #eee;}
-#schoolList li:hover{background:#eee;}
-textarea,input{width:90%;padding:8px;margin:5px 0;border-radius:5px;border:1px solid #ccc;}
-#timer{font-size:2rem;margin:15px 0;}
-.btn-group{display:flex;flex-wrap:wrap;justify-content:center;}
-ul{list-style:none;padding:0;}
-ul li{background:#e0e0e0;margin:5px 0;padding:8px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;}
-ul li button{background:red;color:white;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;}
-ul li button:hover{background:darkred;}
-.dark-mode body,.dark-mode .section,.dark-mode .alt{background:var(--bg-dark);color:var(--text-dark);}
-.dark-mode .top-nav,.dark-mode .btn,.dark-mode .settings-btn{background:var(--dark);color:white;}
-.dark-mode .hero{background:var(--accent);color:white;}
-@media(max-width:500px){
-  .hero h1{font-size:1.8rem;}
-  .btn{padding:8px 16px;font-size:0.9rem;}
-}
-.hidden{display:none;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusFlow | Intelligent Study Platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --surface:#ffffff;
+      --muted:#f4f6fb;
+      --text:#0b1b3a;
+      --subtext:#51607a;
+      --border:rgba(11,27,58,0.10);
+
+      --brand:#1E90FF;
+      --brand-2:#0A2351;
+      --brand-soft:rgba(30,144,255,0.14);
+
+      --danger:#d64545;
+      --success:#1f9d55;
+
+      --shadow:0 14px 35px rgba(10,35,81,0.12);
+      --shadow-soft:0 10px 25px rgba(10,35,81,0.08);
+
+      --radius:18px;
+      --radius-sm:12px;
+
+      --nav-h:64px;
+      --max:1120px;
+
+      --focus:0 0 0 3px rgba(30,144,255,0.35);
+    }
+
+    body[data-theme="dark"]{
+      --bg:#0b0f18;
+      --surface:#0f1626;
+      --muted:#0c1322;
+      --text:#f4f7ff;
+      --subtext:#b7c3dd;
+      --border:rgba(244,247,255,0.10);
+
+      --brand-soft:rgba(30,144,255,0.18);
+      --shadow:0 18px 50px rgba(0,0,0,0.45);
+      --shadow-soft:0 12px 30px rgba(0,0,0,0.30);
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none; }
+    button,input,select,textarea{ font-family:inherit; }
+
+    :focus-visible{
+      outline:none;
+      box-shadow:var(--focus);
+      border-radius:10px;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+    }
+
+    /* TOP NAV */
+    .topbar{
+      position:fixed; inset:0 0 auto 0;
+      height:var(--nav-h);
+      z-index:1000;
+      background:linear-gradient(90deg, var(--brand-2), color-mix(in srgb, var(--brand-2) 80%, var(--brand) 20%));
+      color:#fff;
+      border-bottom:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+    }
+    .topbar-inner{
+      max-width:var(--max);
+      height:100%;
+      margin:0 auto;
+      padding:0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700;
+      letter-spacing:0.2px;
+    }
+    .brand-badge{
+      width:34px; height:34px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.16);
+      display:grid; place-items:center;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);
+      user-select:none;
+    }
+    .navlinks{ display:flex; align-items:center; gap:14px; }
+    .navlinks a{
+      padding:10px 10px;
+      border-radius:12px;
+      font-size:14px;
+      color:rgba(255,255,255,0.92);
+      transition:0.2s;
+    }
+    .navlinks a:hover{ background:rgba(255,255,255,0.12); }
+
+    .iconbtn{
+      border:none;
+      background:rgba(255,255,255,0.14);
+      color:#fff;
+      width:40px; height:40px;
+      border-radius:14px;
+      display:grid; place-items:center;
+      cursor:pointer;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);
+      transition:0.2s;
+    }
+    .iconbtn:hover{ background:rgba(255,255,255,0.20); }
+    .burger{ display:none; }
+    @media(max-width:900px){
+      .navlinks{ display:none; }
+      .burger{ display:grid; }
+    }
+
+    /* MOBILE DRAWER */
+    .drawer-backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:999;
+      opacity:0;
+      pointer-events:none;
+      transition:0.2s;
+    }
+    .drawer-backdrop.open{ opacity:1; pointer-events:auto; }
+    .drawer{
+      position:fixed;
+      top:var(--nav-h);
+      right:12px;
+      width:min(92vw, 380px);
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transform:translateY(-8px);
+      opacity:0;
+      pointer-events:none;
+      transition:0.2s;
+      z-index:1001;
+    }
+    .drawer.open{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+    .drawer a{
+      display:block;
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      color:var(--text);
+      background:transparent;
+    }
+    .drawer a:hover{ background:var(--muted); }
+
+    /* HERO */
+    .hero{
+      padding-top:calc(var(--nav-h) + 18px);
+      padding-bottom:24px;
+    }
+    .hero-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:18px 16px 0;
+      display:grid;
+      grid-template-columns:1.2fr 0.8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .hero-card{
+      border-radius:var(--radius);
+      background:
+        radial-gradient(1200px 500px at 20% 10%, var(--brand-soft), transparent 60%),
+        linear-gradient(135deg, color-mix(in srgb, var(--brand) 55%, #ffffff 45%), var(--brand-2));
+      color:#fff;
+      box-shadow:var(--shadow);
+      padding:20px;
+      overflow:hidden;
+    }
+    .hero-card h1{
+      margin:0 0 6px;
+      font-size:clamp(1.6rem, 2.6vw, 2.3rem);
+      line-height:1.15;
+      letter-spacing:-0.3px;
+    }
+    .hero-card p{ margin:0; opacity:0.92; max-width:58ch; }
+    .hero-actions{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:600;
+      transition:0.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background:rgba(255,255,255,0.92);
+      color:var(--brand-2);
+    }
+    .btn-primary:hover{ background:#fff; transform:translateY(-1px); }
+    .btn-ghost{
+      background:rgba(255,255,255,0.16);
+      color:#fff;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);
+    }
+    .btn-ghost:hover{ background:rgba(255,255,255,0.22); transform:translateY(-1px); }
+
+    .hero-side{
+      border-radius:var(--radius);
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      color:var(--subtext);
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:50%;
+      background:var(--brand);
+      box-shadow:0 0 0 4px var(--brand-soft);
+    }
+    @media(max-width:900px){
+      .hero-inner{ grid-template-columns:1fr; }
+    }
+
+    /* MAIN */
+    main{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:0 16px 90px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:14px;
+    }
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-soft);
+      padding:18px;
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:-0.2px;
+    }
+    .sub{
+      margin:0 0 14px;
+      color:var(--subtext);
+      font-size:13.5px;
+      line-height:1.4;
+    }
+
+    .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .input,.select,textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--muted);
+      color:var(--text);
+      transition:0.2s;
+    }
+    .input:focus,.select:focus,textarea:focus{
+      outline:none;
+      box-shadow:var(--focus);
+      border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+    }
+    .row .input{ flex:1; min-width:160px; }
+
+    .btn-solid{
+      background:var(--brand-2);
+      color:#fff;
+    }
+    .btn-solid:hover{
+      background: color-mix(in srgb, var(--brand-2) 85%, var(--brand) 15%);
+      transform:translateY(-1px);
+    }
+
+    /* TIMER */
+    .timer-wrap{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .ring{
+      width:130px; height:130px;
+      border-radius:50%;
+      background:
+        conic-gradient(var(--brand) var(--p), rgba(0,0,0,0) 0),
+        radial-gradient(circle at center, var(--surface) 63%, transparent 64%),
+        radial-gradient(circle at center, var(--muted), var(--muted));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+    }
+    .timer-text{
+      font-size:24px;
+      font-weight:700;
+      letter-spacing:-0.5px;
+    }
+    .timer-meta{
+      color:var(--subtext);
+      font-size:12.5px;
+      margin-top:2px;
+      text-align:center;
+    }
+
+    /* LISTS */
+    .list{
+      list-style:none;
+      padding:0;
+      margin:10px 0 0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:var(--radius-sm);
+      background:var(--muted);
+      border:1px solid var(--border);
+    }
+    .item-left{ display:flex; gap:10px; align-items:center; min-width:0; }
+    .item label{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      min-width:0;
+    }
+    .item-text{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .trash{
+      border:none;
+      background:rgba(214,69,69,0.12);
+      color:var(--danger);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      transition:0.2s;
+      flex:0 0 auto;
+    }
+    .trash:hover{ background:rgba(214,69,69,0.18); }
+    .done .item-text{ text-decoration:line-through; opacity:0.75; }
+
+    /* AFFIRMATION */
+    .quote{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:var(--radius-sm);
+      background: radial-gradient(700px 220px at 20% 10%, var(--brand-soft), transparent 65%), var(--muted);
+      border:1px solid var(--border);
+      color:var(--text);
+    }
+
+    /* MUSIC */
+    .yt{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* LICENSE BOX */
+    .license-box{
+      margin:0;
+      padding:14px 14px;
+      border-radius:var(--radius-sm);
+      background:var(--muted);
+      border:1px solid var(--border);
+      overflow:auto;
+      max-height:360px;
+      font-size:12.5px;
+      line-height:1.5;
+      color:var(--text);
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    body[data-theme="dark"] .license-box{
+      background: color-mix(in srgb, var(--muted) 78%, #000 22%);
+    }
+
+    /* FLOATING SETTINGS */
+    .fab{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:1100;
+      width:52px; height:52px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition:0.2s;
+    }
+    .fab:hover{ transform:translateY(-2px); }
+
+    /* SETTINGS MODAL */
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:1200;
+      opacity:0;
+      pointer-events:none;
+      transition:0.2s;
+    }
+    .modal-backdrop.open{ opacity:1; pointer-events:auto; }
+    .modal{
+      position:fixed;
+      right:16px;
+      bottom:82px;
+      z-index:1201;
+      width:min(92vw, 420px);
+      max-height:min(78vh, 720px);
+      overflow:auto;
+      border-radius:20px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      transform:translateY(8px);
+      opacity:0;
+      pointer-events:none;
+      transition:0.2s;
+    }
+    .modal.open{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+    .modal header{
+      padding:16px 16px 10px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      position:sticky;
+      top:0;
+      background: color-mix(in srgb, var(--surface) 86%, transparent);
+      backdrop-filter: blur(10px);
+    }
+    .modal h3{ margin:0; font-size:16px; letter-spacing:-0.2px; }
+    .modal .content{
+      padding:14px 16px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    .label{ font-size:13px; color:var(--subtext); }
+
+    .school-results{
+      list-style:none;
+      padding:0; margin:0;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:var(--muted);
+      max-height:180px;
+      overflow:auto;
+    }
+    .school-results button{
+      width:100%;
+      border:none;
+      background:transparent;
+      text-align:left;
+      padding:12px 12px;
+      cursor:pointer;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid var(--border);
+    }
+    .school-results button:hover{ background:rgba(0,0,0,0.04); }
+    body[data-theme="dark"] .school-results button:hover{ background:rgba(255,255,255,0.06); }
+    .swatches{ display:flex; gap:6px; align-items:center; flex:0 0 auto; }
+    .sw{
+      width:14px; height:14px;
+      border-radius:6px;
+      border:1px solid rgba(0,0,0,0.12);
+    }
+
+    .hint{
+      font-size:12.5px;
+      color:var(--subtext);
+      line-height:1.4;
+    }
+    .hr{ height:1px; background:var(--border); margin:2px 0; }
+
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); border:0;
+    }
+  </style>
 </head>
+
 <body>
+  <!-- TOP NAV -->
+  <div class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="FocusFlow Home">
+        <div class="brand-badge" aria-hidden="true">⚡</div>
+        <div>FocusFlow</div>
+      </div>
 
-<nav class="top-nav">
-  <div class="logo">FocusFlow</div>
-  <button class="burger" onclick="toggleNav()">☰</button>
-  <ul class="nav-links">
-    <li><a href="#timerSection">Timer</a></li>
-    <li><a href="#timetableSection">Timetable</a></li>
-    <li><a href="#affirmationSection">Affirmation</a></li>
-    <li><a href="#postStudySection">Post-Study Planner</a></li>
-    <li><a href="#musicSection">Music</a></li>
-    <li><a href="#aboutSection">About</a></li>
-  </ul>
-</nav>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#timerSection" data-i18n="nav_timer">Timer</a>
+        <a href="#timetableSection" data-i18n="nav_plans">Plans</a>
+        <a href="#affirmationSection" data-i18n="nav_affirm">Affirmation</a>
+        <a href="#postStudySection" data-i18n="nav_post">Post-Study</a>
+        <a href="#musicSection" data-i18n="nav_music">Music</a>
+        <a href="#aboutSection" data-i18n="nav_about">About</a>
+        <a href="#licenseSection" data-i18n="nav_license">License</a>
+      </nav>
 
-<header class="hero">
-  <h1 id="heroText">Focus Hard. Elevate Your Mind.</h1>
-</header>
-
-<main>
-<section id="timerSection" class="section">
-  <h2>Pomodoro / Custom Timer</h2>
-  <input type="number" id="customTime" placeholder="Enter minutes" min="1">
-  <button class="btn" onclick="setCustomTime()">Set Timer</button>
-  <div id="timer">25:00</div>
-  <div class="btn-group">
-    <button class="btn" onclick="startTimer()">Start</button>
-    <button class="btn" onclick="pauseTimer()">Pause</button>
-    <button class="btn" onclick="resetTimer()">Reset</button>
+      <div class="row" style="gap:10px">
+        <button class="iconbtn burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+        <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </div>
   </div>
-</section>
 
-<section id="timetableSection" class="section alt">
-  <h2>Your Timetable / Daily Plans</h2>
-  <input type="text" id="planInput" placeholder="Add a plan">
-  <button class="btn" onclick="addPlan()">Add</button>
-  <ul id="planList"></ul>
-</section>
-
-<section id="affirmationSection" class="section">
-  <h2>Daily Affirmation</h2>
-  <button class="btn" onclick="showAffirmation()">Show Daily Affirmation</button>
-  <p id="affText"></p>
-</section>
-
-<section id="postStudySection" class="section alt">
-  <h2>Optional Post-Study Planner</h2>
-  <label><input type="checkbox" id="showPostStudy" onchange="togglePostStudy()"> Show Post-Study Planner</label>
-  <div id="postStudyContainer" class="hidden">
-    <input type="text" id="postStudyInput" placeholder="Add post-study task">
-    <button class="btn" onclick="addPostStudy()">Add Task</button>
-    <ul id="postStudyList"></ul>
+  <!-- MOBILE NAV DRAWER -->
+  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+  <div class="drawer" id="drawer" role="dialog" aria-label="Navigation menu">
+    <a href="#timerSection" data-i18n="nav_timer">Timer</a>
+    <a href="#timetableSection" data-i18n="nav_plans">Plans</a>
+    <a href="#affirmationSection" data-i18n="nav_affirm">Affirmation</a>
+    <a href="#postStudySection" data-i18n="nav_post">Post-Study</a>
+    <a href="#musicSection" data-i18n="nav_music">Music</a>
+    <a href="#aboutSection" data-i18n="nav_about">About</a>
+    <a href="#licenseSection" data-i18n="nav_license">License</a>
   </div>
-</section>
 
-<section id="musicSection" class="section">
-  <h2>Study Music</h2>
-  <iframe width="300" height="170"
-  src="https://www.youtube.com/embed/jfKfPfyJRdk"
-  title="Lofi Beats"
-  frameborder="0"
-  allow="autoplay; encrypted-media"
-  allowfullscreen></iframe>
-</section>
+  <!-- HERO -->
+  <section class="hero" aria-label="Intro">
+    <div class="hero-inner">
+      <div class="hero-card">
+        <h1 id="heroText" data-i18n="hero_title">Focus Hard. Elevate Your Mind.</h1>
+        <p id="heroSub" data-i18n="hero_sub">Plan your day, lock into deep work, and finish with a clean post-study checklist.</p>
 
-<section id="aboutSection" class="section alt">
-  <h2>About FocusFlow</h2>
-  <p>FocusFlow is more than a website—it’s a habit enforcer. Build routines, track your studies, and stay motivated. Customize school themes, language, and daily planners to improve focus and organization.</p>
-</section>
-</main>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#timerSection" data-i18n="hero_cta">Start a Focus Session</a>
+          <button class="btn btn-ghost" id="openSettingsFromHero" data-i18n="hero_customize">Customize Theme</button>
+        </div>
+      </div>
 
-<button class="settings-btn" onclick="openSettings()">⚙</button>
+      <div class="hero-side" aria-label="Daily snapshot">
+        <div class="pill"><span class="dot" aria-hidden="true"></span><span id="todayLabel" data-i18n="today">Today</span></div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px;">
+          <div style="font-weight:700; font-size:18px;" id="todayDate">—</div>
+          <div style="color:var(--subtext); font-size:12.5px;" id="plansCount">0 plans</div>
+        </div>
+        <div class="hint" id="miniTip" data-i18n="tip">
+          Tip: Use the timer + plans together. One plan per focus block works best.
+        </div>
+        <div class="hr"></div>
+        <div class="hint" data-i18n="kbd_hint">
+          Keyboard: <strong>Space</strong> start/pause timer • <strong>R</strong> reset • <strong>Esc</strong> close panels
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="settings-panel" id="settingsPanel">
-  <h3>Settings</h3>
-  <label for="schoolSelect">School Theme</label>
-  <input type="text" id="schoolSelect" placeholder="Search..." oninput="filterSchools()">
-  <ul id="schoolList"></ul>
-  <button class="btn" onclick="applyDefaultTheme()">Default Theme</button>
-  <hr>
-  <label for="languageSelect">Language:</label>
-  <select id="languageSelect" onchange="setLanguage(this.value)">
-    <option value="standard">Standard English</option>
-    <option value="patois">Jamaican Patois</option>
-  </select>
-  <hr>
-  <button class="btn" onclick="toggleDarkMode()">Toggle Dark / Focus Mode</button>
-  <button class="btn alt" onclick="closeSettings()">Close</button>
-  <hr>
-  <p>Suggestions: <strong>forzakemail@gmail.com</strong></p>
-</div>
+  <!-- MAIN -->
+  <main>
+    <div class="grid">
+      <!-- TIMER -->
+      <section id="timerSection" class="card" aria-label="Pomodoro timer">
+        <h2 data-i18n="timer_title">Pomodoro / Custom Timer</h2>
+        <p class="sub" data-i18n="timer_sub">Pick a time, press start, and stay locked in. The ring fills as you progress.</p>
 
-<script>
-// SCHOOL THEMES
-const schools = [
-  { name:"Jamaica College", colors:["#0D47A1","#BBDEFB"] },
-  { name:"Calabar High School", colors:["#1B5E20","#A5D6A7"] },
-  { name:"Kingston College", colors:["#6A1B9A","#E1BEE7"] },
-  { name:"Wolmer’s Boys’ School", colors:["#800000","#FFCDD2"] },
-  { name:"St Jago High School", colors:["#1B5E20","#C8E6C9"] },
-  { name:"St George’s College", colors:["#0D47A1","#BBDEFB"] },
-  { name:"Munro College", colors:["#0D47A1","#C5CAE9"] },
-  { name:"Hampton School", colors:["#1976D2","#90CAF9"] },
-  { name:"Rusea’s High School", colors:["#F9A825","#FFF9C4"] }
-];
-function filterSchools(){
-  const q = document.getElementById("schoolSelect").value.toLowerCase();
-  const list = document.getElementById("schoolList"); list.innerHTML="";
-  schools.filter(s=>s.name.toLowerCase().includes(q))
-    .forEach(s=>{
-      let li=document.createElement("li"); li.textContent=s.name;
-      li.onclick=()=>applyTheme(s.colors); list.appendChild(li);
+        <div class="row">
+          <label class="sr-only" for="customTime" data-i18n="minutes_label">Minutes</label>
+          <input class="input" type="number" id="customTime" placeholder="Enter minutes (e.g., 25)" min="1" inputmode="numeric" />
+          <button class="btn btn-solid" id="setTimerBtn" data-i18n="btn_set">Set</button>
+        </div>
+
+        <div class="timer-wrap" style="margin-top:14px;">
+          <div class="ring" id="ring" style="--p: 0deg;" aria-label="Timer progress">
+            <div style="text-align:center">
+              <div class="timer-text" id="timerText" aria-live="polite">25:00</div>
+              <div class="timer-meta" id="timerMode" data-i18n="timer_ready">Ready</div>
+            </div>
+          </div>
+
+          <div style="flex:1; min-width: 220px;">
+            <div class="row" style="margin-bottom:10px;">
+              <button class="btn btn-solid" id="startBtn" data-i18n="btn_start">Start</button>
+              <button class="btn btn-solid" id="pauseBtn" data-i18n="btn_pause">Pause</button>
+              <button class="btn btn-solid" id="resetBtn" data-i18n="btn_reset">Reset</button>
+            </div>
+            <p class="hint" id="timerHint" data-i18n="timer_hint">Suggested: 25 focus / 5 break. Set any minutes you want.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLANS -->
+      <section id="timetableSection" class="card" aria-label="Daily plans">
+        <h2 data-i18n="plans_title">Your Plans</h2>
+        <p class="sub" data-i18n="plans_sub">Add quick plans for the day. Check them off as you complete.</p>
+
+        <div class="row">
+          <label class="sr-only" for="planInput" data-i18n="plan_add_label">Add a plan</label>
+          <input class="input" type="text" id="planInput" placeholder="Add a plan (e.g., Read Ch. 4 notes)" autocomplete="off" />
+          <button class="btn btn-solid" id="addPlanBtn" data-i18n="btn_add">Add</button>
+        </div>
+
+        <ul class="list" id="planList" aria-label="Plan list"></ul>
+      </section>
+
+      <!-- AFFIRMATION -->
+      <section id="affirmationSection" class="card" aria-label="Daily affirmation">
+        <h2 data-i18n="aff_title">Daily Affirmation</h2>
+        <p class="sub" data-i18n="aff_sub">One message per day. Same message if you revisit today.</p>
+        <div class="row">
+          <button class="btn btn-solid" id="affBtn" data-i18n="btn_show_aff">Show Affirmation</button>
+        </div>
+        <div class="quote" id="affBox" hidden>
+          <div style="font-weight:600; margin-bottom:6px;" data-i18n="aff_label">Your affirmation:</div>
+          <div id="affText"></div>
+        </div>
+      </section>
+
+      <!-- POST STUDY -->
+      <section id="postStudySection" class="card" aria-label="Post study planner">
+        <h2 data-i18n="post_title">Post-Study Planner</h2>
+        <p class="sub" data-i18n="post_sub">Optional checklist for after you finish your session.</p>
+
+        <div class="row" style="justify-content:space-between;">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <input type="checkbox" id="showPostStudy" />
+            <span data-i18n="post_enable">Enable Post-Study Planner</span>
+          </label>
+        </div>
+
+        <div id="postStudyContainer" style="margin-top:12px;" hidden>
+          <div class="row">
+            <label class="sr-only" for="postStudyInput" data-i18n="post_add_label">Add post-study task</label>
+            <input class="input" type="text" id="postStudyInput" placeholder="Add post-study task (e.g., Pack bag for tomorrow)" autocomplete="off" />
+            <button class="btn btn-solid" id="addPostBtn" data-i18n="btn_add">Add</button>
+          </div>
+          <ul class="list" id="postStudyList" aria-label="Post-study task list"></ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- MUSIC -->
+    <section id="musicSection" class="card" style="margin-top:16px;" aria-label="Study music">
+      <h2 data-i18n="music_title">Study Music</h2>
+      <p class="sub" data-i18n="music_sub">Ambient lofi stream. If it doesn’t load on some browsers, open it in YouTube.</p>
+      <iframe
+        class="yt"
+        src="https://www.youtube.com/embed/jfKfPfyJRdk"
+        title="Lofi Beats"
+        allow="autoplay; encrypted-media"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="aboutSection" class="card" style="margin-top:16px;" aria-label="About FocusFlow">
+      <h2 data-i18n="about_title">About FocusFlow</h2>
+      <p class="sub" style="margin-bottom:0;" data-i18n="about_body">
+        FocusFlow is a clean study workflow: plan → focus timer → check off tasks → repeat.
+        Customize your school colors, language, and focus mode for a daily planning experience that feels “real.”
+      </p>
+    </section>
+
+    <!-- LICENSE -->
+    <section id="licenseSection" class="card" style="margin-top:16px;" aria-label="Software license">
+      <h2 data-i18n="license_title">License</h2>
+      <p class="sub" data-i18n="license_sub">Copyright and redistribution terms for FocusFlow.</p>
+
+      <pre class="license-box" aria-label="License text"><code>Copyright (c) 2026, forzakemail-oss
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
+    </section>
+  </main>
+
+  <!-- FLOATING SETTINGS BUTTON -->
+  <button class="fab" id="settingsFab" aria-label="Open settings">⚙️</button>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"></div>
+  <aside class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-label="Settings">
+    <header>
+      <h3 data-i18n="settings_title">Settings</h3>
+      <button class="iconbtn" id="closeSettingsBtn" aria-label="Close settings">✕</button>
+    </header>
+
+    <div class="content">
+      <div class="field">
+        <div class="label" data-i18n="settings_school">School Theme</div>
+        <input class="input" type="text" id="schoolSearch" placeholder="Search school (e.g., Jamaica College)" autocomplete="off" />
+        <ul class="school-results" id="schoolResults" aria-label="School results"></ul>
+        <div class="hint" data-i18n="settings_school_hint">Applies brand colors to the entire site and saves automatically.</div>
+        <div class="row">
+          <button class="btn btn-solid" id="defaultThemeBtn" data-i18n="settings_default">Default Theme</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <div class="label" data-i18n="settings_lang">Language</div>
+        <select class="select" id="languageSelect" aria-label="Language select">
+          <option value="standard">Standard English</option>
+          <option value="patois">Jamaican Creole</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="label" data-i18n="settings_focus">Focus Mode</div>
+        <div class="row">
+          <button class="btn btn-solid" id="darkModeBtn" data-i18n="settings_toggle_dark">Toggle Dark / Focus Mode</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <div class="label" data-i18n="settings_suggest">Suggestions</div>
+        <div class="hint"><strong>forzakemail@gmail.com</strong></div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    /***********************
+     * I18N (FULL UI)      *
+     ***********************/
+    const I18N = {
+      standard: {
+        // nav
+        nav_timer: "Timer",
+        nav_plans: "Plans",
+        nav_affirm: "Affirmation",
+        nav_post: "Post-Study",
+        nav_music: "Music",
+        nav_about: "About",
+        nav_license: "License",
+
+        // hero
+        hero_title: "Focus Hard. Elevate Your Mind.",
+        hero_sub: "Plan your day, lock into deep work, and finish with a clean post-study checklist.",
+        hero_cta: "Start a Focus Session",
+        hero_customize: "Customize Theme",
+        today: "Today",
+        tip: "Tip: Use the timer + plans together. One plan per focus block works best.",
+        kbd_hint: "Keyboard: <strong>Space</strong> start/pause timer • <strong>R</strong> reset • <strong>Esc</strong> close panels",
+
+        // timer
+        timer_title: "Pomodoro / Custom Timer",
+        timer_sub: "Pick a time, press start, and stay locked in. The ring fills as you progress.",
+        minutes_label: "Minutes",
+        timer_hint: "Suggested: 25 focus / 5 break. Set any minutes you want.",
+        timer_ready: "Ready",
+        timer_paused: "Paused",
+        timer_focusing: "Focusing…",
+        timer_complete: "Complete ✅",
+        alert_complete: "Session complete! Take a break.",
+
+        // buttons
+        btn_set: "Set",
+        btn_start: "Start",
+        btn_pause: "Pause",
+        btn_reset: "Reset",
+        btn_add: "Add",
+        btn_show_aff: "Show Affirmation",
+
+        // plans
+        plans_title: "Your Plans",
+        plans_sub: "Add quick plans for the day. Check them off as you complete.",
+        plan_add_label: "Add a plan",
+        plan_placeholder: "Add a plan (e.g., Read Ch. 4 notes)",
+        plans_count: (n) => `${n} plan${n === 1 ? "" : "s"}`,
+        aria_done_plan: "Mark plan done",
+        aria_delete_plan: "Delete plan",
+
+        // affirmation
+        aff_title: "Daily Affirmation",
+        aff_sub: "One message per day. Same message if you revisit today.",
+        aff_label: "Your affirmation:",
+
+        // post study
+        post_title: "Post-Study Planner",
+        post_sub: "Optional checklist for after you finish your session.",
+        post_enable: "Enable Post-Study Planner",
+        post_add_label: "Add post-study task",
+        post_placeholder: "Add post-study task (e.g., Pack bag for tomorrow)",
+        aria_done_task: "Mark task done",
+        aria_delete_task: "Delete task",
+
+        // music
+        music_title: "Study Music",
+        music_sub: "Ambient lofi stream. If it doesn’t load on some browsers, open it in YouTube.",
+
+        // about
+        about_title: "About FocusFlow",
+        about_body: "FocusFlow is a clean study workflow: plan → focus timer → check off tasks → repeat. Customize your school colors, language, and focus mode for a daily planning experience that feels “real.”",
+
+        // license
+        license_title: "License",
+        license_sub: "Copyright and redistribution terms for FocusFlow.",
+
+        // settings
+        settings_title: "Settings",
+        settings_school: "School Theme",
+        settings_school_hint: "Applies brand colors to the entire site and saves automatically.",
+        settings_default: "Default Theme",
+        settings_lang: "Language",
+        settings_focus: "Focus Mode",
+        settings_toggle_dark: "Toggle Dark / Focus Mode",
+        settings_suggest: "Suggestions",
+        school_search_placeholder: "Search school (e.g., Jamaica College)",
+        no_matches: "No matches. Try another name.",
+
+        // misc
+        open_menu_aria: "Open menu",
+        toggle_dark_aria: "Toggle dark mode",
+        open_settings_aria: "Open settings",
+        close_settings_aria: "Close settings"
+      },
+
+      patois: {
+        // nav
+        nav_timer: "Taimah",
+        nav_plans: "Plan Dem",
+        nav_affirm: "Affimeyshan",
+        nav_post: "Afta-Study",
+        nav_music: "Myuuzik",
+        nav_about: "Bout",
+        nav_license: "Laizens",
+
+        // hero
+        hero_title: "Focus Strong. Mek Yuh Grades Rise!",
+        hero_sub: "Plan yuh day, lock in fi deep work, an’ done wid a neat afta-study checklist.",
+        hero_cta: "Start One Focus Session",
+        hero_customize: "Customize Di Theme",
+        today: "Tudey",
+        tip: "Tip: Use di taimah an’ di plan dem together. One plan fi one focus block work best.",
+        kbd_hint: "Keyboard: <strong>Space</strong> start/pause taimah • <strong>R</strong> reset • <strong>Esc</strong> close panel dem",
+
+        // timer
+        timer_title: "Pomodoro / Custom Taimah",
+        timer_sub: "Pick di time, press start, an’ lock in. Di ring a fill up as yuh go.",
+        minutes_label: "Minits",
+        timer_hint: "Suggested: 25 focus / 5 break. Set any minits weh yuh want.",
+        timer_ready: "Ready",
+        timer_paused: "Pause",
+        timer_focusing: "A Focus…",
+        timer_complete: "Done ✅",
+        alert_complete: "Session done! Tek one likkle break.",
+
+        // buttons
+        btn_set: "Set",
+        btn_start: "Start",
+        btn_pause: "Pause",
+        btn_reset: "Reset",
+        btn_add: "Add",
+        btn_show_aff: "Show Affimeyshan",
+
+        // plans
+        plans_title: "Yuh Plan Dem",
+        plans_sub: "Add quick plan fi di day. Tick dem off when yuh done.",
+        plan_add_label: "Add one plan",
+        plan_placeholder: "Add one plan (e.g., Read Ch. 4 note dem)",
+        plans_count: (n) => `${n} plan`, // keep simple
+        aria_done_plan: "Mark plan done",
+        aria_delete_plan: "Delete plan",
+
+        // affirmation
+        aff_title: "Daily Affimeyshan",
+        aff_sub: "One message fi di day. Same message if yuh come back today.",
+        aff_label: "Yuh affimeyshan:",
+
+        // post study
+        post_title: "Afta-Study Planah",
+        post_sub: "Optional checklist fi afta yuh done yuh session.",
+        post_enable: "Turn on Afta-Study Planah",
+        post_add_label: "Add afta-study task",
+        post_placeholder: "Add afta-study task (e.g., Pack bag fi tomorrow)",
+        aria_done_task: "Mark task done",
+        aria_delete_task: "Delete task",
+
+        // music
+        music_title: "Study Myuuzik",
+        music_sub: "Lofi stream fi keep yuh calm. If it nuh load, open it in YouTube.",
+
+        // about
+        about_title: "Bout FocusFlow",
+        about_body: "FocusFlow a one clean study flow: plan → focus taimah → tick off task dem → repeat. Customize yuh school colour dem, language, an’ focus mode fi mek it feel proper an’ real.",
+
+        // license
+        license_title: "Laizens",
+        license_sub: "Copyright an’ redistribution term dem fi FocusFlow.",
+
+        // settings
+        settings_title: "Settings",
+        settings_school: "School Theme",
+        settings_school_hint: "Dis apply di brand colour dem pon di whole site an’ it save automatic.",
+        settings_default: "Default Theme",
+        settings_lang: "Language",
+        settings_focus: "Focus Mode",
+        settings_toggle_dark: "Toggle Dark / Focus Mode",
+        settings_suggest: "Suggestion",
+        school_search_placeholder: "Search school (e.g., Jamaica College)",
+        no_matches: "Mi nuh find none. Try one next name.",
+
+        // misc
+        open_menu_aria: "Open menu",
+        toggle_dark_aria: "Toggle dark mode",
+        open_settings_aria: "Open settings",
+        close_settings_aria: "Close settings"
+      }
+    };
+
+    /***********************
+     * DATA: SCHOOL THEMES *
+     ***********************/
+    const schools = [
+      { name:"Jamaica College",       colors:["#0D1B5E", "#FFFFFF"] },
+      { name:"Calabar High School",   colors:["#0B6B2E", "#000000"] },
+      { name:"Kingston College",      colors:["#5B2C83", "#FFFFFF"] },
+      { name:"Wolmer’s Boys’ School", colors:["#6B0F1A", "#D4AF37"] },
+      { name:"St Jago High School",   colors:["#0B6B2E", "#D4AF37"] },
+      { name:"St George’s College",   colors:["#2B6CB0", "#FFFFFF"] },
+      { name:"Munro College",         colors:["#0D1B5E", "#D4AF37"] },
+      { name:"Hampton School",        colors:["#1E4FB8", "#FFFFFF"] },
+      { name:"Rusea’s High School",   colors:["#F6C400", "#1E4FB8", "#0B6B2E"] }
+    ];
+
+    /********************
+     * STATE + STORAGE  *
+     ********************/
+    const STORAGE_KEY = "focusflow_settings_v3";
+    const state = {
+      theme: "light",
+      brand: "#1E90FF",
+      brand2: "#0A2351",
+      lang: "standard",
+      showPost: false,
+      timerDefault: 25 * 60
+    };
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const saved = JSON.parse(raw);
+        Object.assign(state, saved || {});
+      }catch(e){}
+    }
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        theme: state.theme,
+        brand: state.brand,
+        brand2: state.brand2,
+        lang: state.lang,
+        showPost: state.showPost,
+        timerDefault: state.timerDefault
+      }));
+    }
+
+    function applyThemeVars(){
+      document.documentElement.style.setProperty("--brand", state.brand);
+      document.documentElement.style.setProperty("--brand-2", state.brand2);
+      document.body.setAttribute("data-theme", state.theme);
+      document.getElementById("themeBtn").textContent = (state.theme === "dark") ? "☀️" : "🌙";
+    }
+
+    /********************
+     * I18N APPLY        *
+     ********************/
+    function t(key){
+      const dict = I18N[state.lang] || I18N.standard;
+      return dict[key] ?? I18N.standard[key] ?? "";
+    }
+
+    function setText(el, value){
+      if(!el) return;
+      el.textContent = value;
+    }
+
+    function applyLanguage(){
+      // translate text nodes
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const val = t(key);
+        // allow bold HTML in the keyboard hint
+        if(key === "kbd_hint"){
+          el.innerHTML = val;
+        } else {
+          el.textContent = val;
+        }
+      });
+
+      // placeholders
+      document.getElementById("planInput").placeholder = t("plan_placeholder");
+      document.getElementById("postStudyInput").placeholder = t("post_placeholder");
+      document.getElementById("customTime").placeholder = (state.lang === "patois")
+        ? "Enter minits (e.g., 25)"
+        : "Enter minutes (e.g., 25)";
+      document.getElementById("schoolSearch").placeholder = t("school_search_placeholder");
+
+      // aria labels (optional polish)
+      burgerBtn.setAttribute("aria-label", t("open_menu_aria"));
+      themeBtn.setAttribute("aria-label", t("toggle_dark_aria"));
+      settingsFab.setAttribute("aria-label", t("open_settings_aria"));
+      closeSettingsBtn.setAttribute("aria-label", t("close_settings_aria"));
+
+      // timer status label refresh
+      if(interval) timerMode.textContent = t("timer_focusing");
+      else {
+        // if time is 0 and last mode was complete
+        if(time <= 0) timerMode.textContent = t("timer_complete");
+        else timerMode.textContent = t("timer_ready");
+      }
+
+      // re-render plan counts (language dependent)
+      renderPlans();
+      renderPostTasks();
+      renderSchoolResults(schoolSearch.value || "");
+    }
+
+    /********************
+     * DATE + COUNTERS  *
+     ********************/
+    function updateToday(){
+      const d = new Date();
+      const fmt = d.toLocaleDateString(undefined, { weekday:"long", year:"numeric", month:"short", day:"numeric" });
+      document.getElementById("todayDate").textContent = fmt;
+    }
+
+    /********************
+     * MOBILE NAV DRAWER*
+     ********************/
+    const burgerBtn = document.getElementById("burgerBtn");
+    const drawer = document.getElementById("drawer");
+    const drawerBackdrop = document.getElementById("drawerBackdrop");
+
+    function openDrawer(){
+      drawer.classList.add("open");
+      drawerBackdrop.classList.add("open");
+      burgerBtn.setAttribute("aria-expanded","true");
+    }
+    function closeDrawer(){
+      drawer.classList.remove("open");
+      drawerBackdrop.classList.remove("open");
+      burgerBtn.setAttribute("aria-expanded","false");
+    }
+    burgerBtn.addEventListener("click", () => {
+      drawer.classList.contains("open") ? closeDrawer() : openDrawer();
     });
-}
-function applyTheme(colors){
-  document.documentElement.style.setProperty("--accent",colors[0]);
-  document.documentElement.style.setProperty("--primary",colors[1]||"#fff");
-}
-function applyDefaultTheme(){
-  document.documentElement.style.setProperty("--accent","#1E90FF");
-  document.documentElement.style.setProperty("--primary","#ffffff");
-}
+    drawerBackdrop.addEventListener("click", closeDrawer);
+    drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", closeDrawer));
 
-// NAV
-function toggleNav(){document.querySelector(".nav-links").classList.toggle("open");}
-function openSettings(){document.getElementById("settingsPanel").classList.add("open"); filterSchools();}
-function closeSettings(){document.getElementById("settingsPanel").classList.remove("open");}
+    /********************
+     * SETTINGS MODAL   *
+     ********************/
+    const settingsFab = document.getElementById("settingsFab");
+    const settingsModal = document.getElementById("settingsModal");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+    const openSettingsFromHero = document.getElementById("openSettingsFromHero");
 
-// DARK MODE
-function toggleDarkMode(){document.body.classList.toggle("dark-mode");}
+    let lastFocusEl = null;
 
-// LANGUAGE
-function setLanguage(lang){
-  if(lang==="patois"){document.getElementById("heroText").innerText="Focus Strong. Mek Yuh Grades Rise!";}
-  else{document.getElementById("heroText").innerText="Focus Hard. Elevate Your Mind.";}
-}
+    function openSettings(){
+      lastFocusEl = document.activeElement;
+      settingsModal.classList.add("open");
+      modalBackdrop.classList.add("open");
+      modalBackdrop.setAttribute("aria-hidden","false");
+      document.getElementById("schoolSearch").focus();
+      renderSchoolResults("");
+    }
+    function closeSettings(){
+      settingsModal.classList.remove("open");
+      modalBackdrop.classList.remove("open");
+      modalBackdrop.setAttribute("aria-hidden","true");
+      if(lastFocusEl) lastFocusEl.focus();
+    }
 
-// AFFIRMATIONS
-const affirmations=["Every day you grow stronger.","Focus today, succeed tomorrow.","Small progress is still progress.","Your hard work defines your future.","Stay consistent, stay committed.","One focused hour can change your future.","Discipline today = success tomorrow.","Consistency beats cramming."];
-function showAffirmation(){
-  const now = new Date();
-  const today = now.toISOString().split("T")[0];
-  const lastDate = localStorage.getItem("lastAffirmationDate");
-  let aff;
-  if(lastDate !== today){
-    aff = affirmations[Math.floor(Math.random()*affirmations.length)];
-    localStorage.setItem("todayAffirmation", aff);
-    localStorage.setItem("lastAffirmationDate", today);
-  } else {
-    aff = localStorage.getItem("todayAffirmation");
-  }
-  document.getElementById("affText").innerText = aff;
-}
+    settingsFab.addEventListener("click", openSettings);
+    openSettingsFromHero.addEventListener("click", openSettings);
+    closeSettingsBtn.addEventListener("click", closeSettings);
+    modalBackdrop.addEventListener("click", closeSettings);
 
-// TIMETABLE
-let plans = JSON.parse(localStorage.getItem("plans"))||[];
-function renderPlans(){
-  const ul = document.getElementById("planList"); ul.innerHTML="";
-  plans.forEach((p,i)=>{
-    let li=document.createElement("li"); li.textContent=p;
-    let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{plans.splice(i,1);savePlans();};
-    li.appendChild(btn); ul.appendChild(li);
-  });
-}
-function addPlan(){
-  const input=document.getElementById("planInput");
-  if(input.value.trim()){plans.push(input.value.trim()); savePlans(); input.value="";}
-}
-function savePlans(){localStorage.setItem("plans", JSON.stringify(plans)); renderPlans();}
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        closeSettings();
+        closeDrawer();
+      }
+    });
 
-// POST-STUDY
-let postTasks = JSON.parse(localStorage.getItem("postTasks"))||[];
-function renderPostStudy(){const ul=document.getElementById("postStudyList");ul.innerHTML="";postTasks.forEach((t,i)=>{let li=document.createElement("li"); li.textContent=t; let btn=document.createElement("button"); btn.textContent="✔"; btn.onclick=()=>{li.style.textDecoration="line-through";}; li.appendChild(btn); ul.appendChild(li);});}
-function addPostStudy(){const input=document.getElementById("postStudyInput");if(input.value.trim()){postTasks.push(input.value.trim());localStorage.setItem("postTasks",JSON.stringify(postTasks));renderPostStudy();input.value="";}}
-function togglePostStudy(){document.getElementById("postStudyContainer").classList.toggle("hidden");}
+    /********************
+     * DARK MODE        *
+     ********************/
+    const themeBtn = document.getElementById("themeBtn");
+    const darkModeBtn = document.getElementById("darkModeBtn");
 
-// TIMER
-let time=1500, interval=null;
-function updateTimer(){document.getElementById("timer").innerText=`${Math.floor(time/60)}:${(time%60).toString().padStart(2,"0")}`;}
-function startTimer(){if(!interval){interval=setInterval(()=>{updateTimer();time--;if(time<0){clearInterval(interval);interval=null;alert("Session complete! Take a break.");}},1000);}}
-function pauseTimer(){clearInterval(interval);interval=null;}
-function resetTimer(){pauseTimer();updateTimer();}
-function setCustomTime(){const val=parseInt(document.getElementById("customTime").value);if(val>0){time=val*60;updateTimer();}}
+    function toggleTheme(){
+      state.theme = (state.theme === "dark") ? "light" : "dark";
+      applyThemeVars();
+      saveState();
+    }
+    themeBtn.addEventListener("click", toggleTheme);
+    darkModeBtn.addEventListener("click", toggleTheme);
 
-// INIT
-document.addEventListener("DOMContentLoaded",()=>{updateTimer();renderPlans();renderPostStudy();});
-</script>
+    /********************
+     * LANGUAGE         *
+     ********************/
+    const languageSelect = document.getElementById("languageSelect");
+    languageSelect.addEventListener("change", (e) => {
+      state.lang = e.target.value;
+      applyLanguage();
+      saveState();
+    });
+
+    /********************
+     * SCHOOL THEMES    *
+     ********************/
+    const schoolSearch = document.getElementById("schoolSearch");
+    const schoolResults = document.getElementById("schoolResults");
+    const defaultThemeBtn = document.getElementById("defaultThemeBtn");
+
+    function setThemeFromSchool(s){
+      state.brand = s.colors[0];
+      state.brand2 = (s.colors[1] && s.colors[1] !== "#FFFFFF") ? s.colors[1] : "#0A2351";
+      applyThemeVars();
+      saveState();
+    }
+
+    function renderSchoolResults(query){
+      const q = (query || "").trim().toLowerCase();
+      const matches = schools.filter(s => s.name.toLowerCase().includes(q));
+      schoolResults.innerHTML = "";
+
+      matches.slice(0, 12).forEach(s => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.innerHTML = `
+          <span>${s.name}</span>
+          <span class="swatches" aria-hidden="true">
+            ${s.colors.slice(0,3).map(c => `<span class="sw" style="background:${c}"></span>`).join("")}
+          </span>
+        `;
+        btn.addEventListener("click", () => setThemeFromSchool(s));
+        schoolResults.appendChild(btn);
+      });
+
+      if(matches.length === 0){
+        const empty = document.createElement("div");
+        empty.style.padding = "12px";
+        empty.style.color = "var(--subtext)";
+        empty.textContent = t("no_matches");
+        schoolResults.appendChild(empty);
+      }
+    }
+
+    schoolSearch.addEventListener("input", (e) => renderSchoolResults(e.target.value));
+
+    defaultThemeBtn.addEventListener("click", () => {
+      state.brand = "#1E90FF";
+      state.brand2 = "#0A2351";
+      applyThemeVars();
+      saveState();
+    });
+
+    /********************
+     * AFFIRMATIONS     *
+     ********************/
+    const affirmations = [
+      "Every day you grow stronger.",
+      "Focus today, succeed tomorrow.",
+      "Small progress is still progress.",
+      "Your hard work defines your future.",
+      "Stay consistent, stay committed.",
+      "One focused hour can change your future.",
+      "Discipline today = success tomorrow.",
+      "Consistency beats cramming."
+    ];
+
+    // Optional: patois affirmations
+    const affirmationsPatois = [
+      "Every day yuh a get stronger.",
+      "Focus today, win tomorrow.",
+      "Likkle progress still a progress.",
+      "Yuh hard work a build yuh future.",
+      "Stay consistent, stay committed.",
+      "One focused hour can change yuh future.",
+      "Discipline today = success tomorrow.",
+      "Consistency beat cramming."
+    ];
+
+    const affBtn = document.getElementById("affBtn");
+    const affBox = document.getElementById("affBox");
+    const affText = document.getElementById("affText");
+
+    function showAffirmation(){
+      const today = new Date().toISOString().split("T")[0];
+      const lastDate = localStorage.getItem("ff_lastAffDate");
+      let aff;
+
+      const pool = (state.lang === "patois") ? affirmationsPatois : affirmations;
+
+      if(lastDate !== today){
+        aff = pool[Math.floor(Math.random() * pool.length)];
+        localStorage.setItem("ff_todayAff", aff);
+        localStorage.setItem("ff_lastAffDate", today);
+      } else {
+        aff = localStorage.getItem("ff_todayAff") || pool[0];
+      }
+
+      affText.textContent = aff;
+      affBox.hidden = false;
+    }
+
+    affBtn.addEventListener("click", showAffirmation);
+
+    /********************
+     * PLANS            *
+     ********************/
+    const planInput = document.getElementById("planInput");
+    const addPlanBtn = document.getElementById("addPlanBtn");
+    const planList = document.getElementById("planList");
+    const plansCount = document.getElementById("plansCount");
+
+    let plans = [];
+
+    function loadPlans(){
+      try{ plans = JSON.parse(localStorage.getItem("ff_plans") || "[]"); }
+      catch(e){ plans = []; }
+    }
+    function savePlans(){
+      localStorage.setItem("ff_plans", JSON.stringify(plans));
+      renderPlans();
+    }
+
+    function renderPlans(){
+      planList.innerHTML = "";
+      const remaining = plans.filter(p => !p.done).length;
+      const dict = I18N[state.lang] || I18N.standard;
+      plansCount.textContent = (typeof dict.plans_count === "function") ? dict.plans_count(remaining) : `${remaining}`;
+
+      plans.forEach((p, i) => {
+        const li = document.createElement("li");
+        li.className = "item" + (p.done ? " done" : "");
+        li.innerHTML = `
+          <div class="item-left">
+            <label>
+              <input type="checkbox" ${p.done ? "checked" : ""} aria-label="${t("aria_done_plan")}">
+              <span class="item-text">${escapeHtml(p.text)}</span>
+            </label>
+          </div>
+          <button class="trash" aria-label="${t("aria_delete_plan")}">🗑</button>
+        `;
+
+        const checkbox = li.querySelector("input[type='checkbox']");
+        const del = li.querySelector(".trash");
+
+        checkbox.addEventListener("change", () => {
+          plans[i].done = checkbox.checked;
+          savePlans();
+        });
+        del.addEventListener("click", () => {
+          plans.splice(i, 1);
+          savePlans();
+        });
+
+        planList.appendChild(li);
+      });
+    }
+
+    function addPlan(){
+      const text = planInput.value.trim();
+      if(!text) return;
+      plans.unshift({ text, done:false });
+      planInput.value = "";
+      savePlans();
+    }
+    addPlanBtn.addEventListener("click", addPlan);
+    planInput.addEventListener("keydown", (e) => { if(e.key === "Enter") addPlan(); });
+
+    /********************
+     * POST STUDY       *
+     ********************/
+    const showPostStudy = document.getElementById("showPostStudy");
+    const postStudyContainer = document.getElementById("postStudyContainer");
+    const postStudyInput = document.getElementById("postStudyInput");
+    const addPostBtn = document.getElementById("addPostBtn");
+    const postStudyList = document.getElementById("postStudyList");
+
+    let postTasks = [];
+
+    function loadPostTasks(){
+      try{ postTasks = JSON.parse(localStorage.getItem("ff_post") || "[]"); }
+      catch(e){ postTasks = []; }
+    }
+    function savePostTasks(){
+      localStorage.setItem("ff_post", JSON.stringify(postTasks));
+      renderPostTasks();
+    }
+    function renderPostTasks(){
+      postStudyList.innerHTML = "";
+      postTasks.forEach((tObj, i) => {
+        const li = document.createElement("li");
+        li.className = "item" + (tObj.done ? " done" : "");
+        li.innerHTML = `
+          <div class="item-left">
+            <label>
+              <input type="checkbox" ${tObj.done ? "checked" : ""} aria-label="${t("aria_done_task")}">
+              <span class="item-text">${escapeHtml(tObj.text)}</span>
+            </label>
+          </div>
+          <button class="trash" aria-label="${t("aria_delete_task")}">🗑</button>
+        `;
+
+        li.querySelector("input").addEventListener("change", (e) => {
+          postTasks[i].done = e.target.checked;
+          savePostTasks();
+        });
+        li.querySelector(".trash").addEventListener("click", () => {
+          postTasks.splice(i, 1);
+          savePostTasks();
+        });
+
+        postStudyList.appendChild(li);
+      });
+    }
+
+    function setPostStudyVisibility(checked){
+      state.showPost = !!checked;
+      postStudyContainer.hidden = !state.showPost;
+      showPostStudy.checked = state.showPost;
+      saveState();
+    }
+    showPostStudy.addEventListener("change", (e) => setPostStudyVisibility(e.target.checked));
+
+    function addPostTask(){
+      const text = postStudyInput.value.trim();
+      if(!text) return;
+      postTasks.unshift({ text, done:false });
+      postStudyInput.value = "";
+      savePostTasks();
+    }
+    addPostBtn.addEventListener("click", addPostTask);
+    postStudyInput.addEventListener("keydown", (e) => { if(e.key === "Enter") addPostTask(); });
+
+    /********************
+     * TIMER (FIXED)    *
+     ********************/
+    const ring = document.getElementById("ring");
+    const timerText = document.getElementById("timerText");
+    const timerMode = document.getElementById("timerMode");
+
+    const setTimerBtn = document.getElementById("setTimerBtn");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let defaultTime = 25 * 60;
+    let time = defaultTime;
+    let interval = null;
+
+    function formatTime(sec){
+      const m = Math.floor(sec / 60);
+      const s = (sec % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    function updateRing(){
+      const total = defaultTime || 1;
+      const progress = Math.max(0, Math.min(1, (total - time) / total));
+      const deg = progress * 360;
+      ring.style.setProperty("--p", `${deg}deg`);
+      timerText.textContent = formatTime(time);
+    }
+
+    function startTimer(){
+      if(interval) return;
+      timerMode.textContent = t("timer_focusing");
+      interval = setInterval(() => {
+        if(time <= 0){
+          time = 0;
+          updateRing();
+          clearInterval(interval);
+          interval = null;
+          timerMode.textContent = t("timer_complete");
+          alert(t("alert_complete"));
+          return;
+        }
+        time--;
+        updateRing();
+      }, 1000);
+    }
+
+    function pauseTimer(){
+      if(interval){
+        clearInterval(interval);
+        interval = null;
+      }
+      timerMode.textContent = t("timer_paused");
+    }
+
+    function resetTimer(){
+      pauseTimer();
+      time = defaultTime;
+      timerMode.textContent = t("timer_ready");
+      updateRing();
+    }
+
+    function setCustomTime(){
+      const val = parseInt(document.getElementById("customTime").value, 10);
+      if(!val || val < 1) return;
+      pauseTimer();
+      defaultTime = val * 60;
+      time = defaultTime;
+      state.timerDefault = defaultTime;
+      saveState();
+      timerMode.textContent = t("timer_ready");
+      updateRing();
+    }
+
+    setTimerBtn.addEventListener("click", setCustomTime);
+    startBtn.addEventListener("click", startTimer);
+    pauseBtn.addEventListener("click", pauseTimer);
+    resetBtn.addEventListener("click", resetTimer);
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e) => {
+      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      if(["INPUT","TEXTAREA","SELECT"].includes(tag)) return;
+
+      if(e.code === "Space"){
+        e.preventDefault();
+        interval ? pauseTimer() : startTimer();
+      }
+      if(e.key.toLowerCase() === "r"){
+        resetTimer();
+      }
+    });
+
+    /********************
+     * HELPERS          *
+     ********************/
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[m]));
+    }
+
+    /********************
+     * INIT             *
+     ********************/
+    (function init(){
+      loadState();
+      applyThemeVars();
+
+      // load lists
+      loadPlans();
+      loadPostTasks();
+
+      // post-study visibility
+      setPostStudyVisibility(!!state.showPost);
+
+      // timer defaults
+      defaultTime = state.timerDefault || (25 * 60);
+      time = defaultTime;
+      updateRing();
+
+      // set language select + apply translations
+      languageSelect.value = state.lang || "standard";
+      applyLanguage();
+
+      // init date + render lists
+      updateToday();
+      renderPlans();
+      renderPostTasks();
+
+      // initial school list
+      renderSchoolResults("");
+
+      // set initial timer label
+      timerMode.textContent = t("timer_ready");
+    })();
+  </script>
 </body>
 </html>
